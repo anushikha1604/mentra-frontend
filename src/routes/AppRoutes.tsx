@@ -1,12 +1,12 @@
 import { Route, Routes, BrowserRouter } from 'react-router';
 import { HOME, LOGIN, SIGNIN, SIGNUP } from '../constants/ROUTES';
 import { PreLoginRoot } from './PreLoginRoot';
-import { LandingPage } from '../pages/LandingPage';
-import { LoginPage } from '../pages/LoginPage';
+import { LandingPage } from '../pages/landing/LandingPage';
+import { LoginPage } from '../pages/login/LoginPage';
 import App from '../App';
-import { SignUpPage } from '../pages/SignUpPage';
-import { SignupStudent } from '../pages/SignupStudent';
-import { SignupInstitute } from '../pages/SignupInstitute';
+import { SignUpPage } from '../pages/signup/SignUpPage';
+import { SignupStudent } from '../pages/signup/SignupStudent';
+import { SignupInstitute } from '../pages/signup/SignupInstitute';
 
 export const AppRoutes = () => {
   return (
