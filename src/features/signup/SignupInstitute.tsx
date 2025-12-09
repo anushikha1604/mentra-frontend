@@ -44,9 +44,10 @@ import {
   Star,
 } from 'lucide-react';
 import { Link } from 'react-router';
+import { ROLES } from '../../constants/APP';
+import { useAddAPIMutation } from './instituteSlice';
 
 export function SignupInstitute() {
-  const [step, setStep] = useState<'role' | 'student' | 'admin'>('role');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -54,33 +55,24 @@ export function SignupInstitute() {
     [key: string]: string;
   }>({});
   const [formData, setFormData] = useState({
-    role: '',
-    // Student fields
     fullName: '',
+    emailId: '',
     primaryPhone: '',
     alternatePhone: '',
-    email: '',
     address: '',
     city: '',
     state: '',
+    country: '',
     pincode: '',
-    gender: '',
-    collegeId: '',
-    studentId: '',
-    collegeName: '',
-    course: '',
-    year: '',
-    wishlistCompany: '',
     password: '',
     confirmPassword: '',
+    role: ROLES.INSTITUTE,
+    collegeId: '',
     agreeTerms: false,
-    // Admin fields
-    institutionName: '',
-    officialEmail: '',
-    username: '',
-    adminRole: '',
-    accessCode: '',
   });
+
+  const [addAPI, { error, isError, isLoading, isSuccess }] =
+    useAddAPIMutation();
 
   const validateField = (field: string, value: any) => {
     const errors: { [key: string]: string } = {};
@@ -94,7 +86,6 @@ export function SignupInstitute() {
         }
         break;
       case 'email':
-      case 'officialEmail':
         if (!value.trim()) {
           errors[field] = 'Email is required';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -169,89 +160,67 @@ export function SignupInstitute() {
     }
   };
 
-  const handleRoleSelect = (role: 'student' | 'admin') => {
-    setFormData((prev) => ({ ...prev, role }));
-    setStep(role);
-  };
-
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
 
-    if (step === 'student') {
-      // Required fields for student
-      const requiredFields = [
-        'fullName',
-        'email',
-        'primaryPhone',
-        'address',
-        'city',
-        'state',
-        'pincode',
-        'gender',
-        'collegeName',
-        'course',
-        'year',
-        'password',
-        'confirmPassword',
-      ];
+    // Required fields for student
+    const requiredFields = [
+      'fullName',
+      'emailId',
+      'primaryPhone',
+      'alternatePhone',
+      'address',
+      'city',
+      'state',
+      'country',
+      'pincode',
+      'password',
+      'collegeId',
+      'agreeTerms',
+    ];
 
-      requiredFields.forEach((field) => {
-        if (!formData[field as keyof typeof formData]) {
-          errors[field] = `${field
-            .replace(/([A-Z])/g, ' $1')
-            .toLowerCase()} is required`;
-        }
-      });
-
-      // Additional validations
-      Object.keys(formData).forEach((field) => {
-        const fieldErrors = validateField(
-          field,
-          formData[field as keyof typeof formData]
-        );
-        Object.assign(errors, fieldErrors);
-      });
-
-      if (!formData.agreeTerms) {
-        errors.agreeTerms = 'You must agree to the terms and conditions';
+    requiredFields.forEach((field) => {
+      if (!formData[field as keyof typeof formData]) {
+        errors[field] = `${field
+          .replace(/([A-Z])/g, ' $1')
+          .toLowerCase()} is required`;
       }
+    });
 
-      if (passwordStrength < 50) {
-        errors.password =
-          'Password is too weak. Please create a stronger password.';
-      }
+    // Additional validations
+    Object.keys(formData).forEach((field) => {
+      const fieldErrors = validateField(
+        field,
+        formData[field as keyof typeof formData]
+      );
+      Object.assign(errors, fieldErrors);
+    });
+
+    if (!formData.agreeTerms) {
+      errors.agreeTerms = 'You must agree to the terms and conditions';
     }
+
+    // if (passwordStrength < 50) {
+    //   errors.password =
+    //     'Password is too weak. Please create a stronger password.';
+    // }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
       return;
     }
 
-    // Simulate successful registration
-    console.log('Form submitted:', formData);
+    await addAPI(formData);
     alert(
       'Account created successfully! Please check your email for verification.'
     );
     // onNavigate('login');
-  };
-
-  const getPasswordStrengthColor = () => {
-    if (passwordStrength < 50) return 'bg-red-500';
-    if (passwordStrength < 75) return 'bg-yellow-500';
-    return 'bg-green-500';
-  };
-
-  const getPasswordStrengthText = () => {
-    if (passwordStrength < 25) return 'Very Weak';
-    if (passwordStrength < 50) return 'Weak';
-    if (passwordStrength < 75) return 'Good';
-    return 'Strong';
   };
 
   return (
@@ -297,7 +266,7 @@ export function SignupInstitute() {
                       htmlFor="fullName"
                       className="font-body text-primary-strong"
                     >
-                      Full Name (Admin/Placement Officer) *
+                      Collage Name (Admin/Placement Officer) *
                     </Label>
                     <Input
                       id="fullName"
@@ -310,39 +279,22 @@ export function SignupInstitute() {
                       required
                     />
                   </div>
+
                   <div>
                     <Label
-                      htmlFor="institutionName"
-                      className="font-body text-primary-strong"
-                    >
-                      Institution/University Name *
-                    </Label>
-                    <Input
-                      id="institutionName"
-                      placeholder="Enter institution name"
-                      className="font-body"
-                      value={formData.institutionName}
-                      onChange={(e) =>
-                        handleInputChange('institutionName', e.target.value)
-                      }
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="officialEmail"
+                      htmlFor="emailId"
                       className="font-body text-primary-strong"
                     >
                       Official Email Address *
                     </Label>
                     <Input
-                      id="officialEmail"
+                      id="emailId"
                       type="email"
                       placeholder="admin@university.edu"
                       className="font-body"
-                      value={formData.officialEmail}
+                      value={formData.emailId}
                       onChange={(e) =>
-                        handleInputChange('officialEmail', e.target.value)
+                        handleInputChange('emailId', e.target.value)
                       }
                       required
                     />
@@ -361,6 +313,138 @@ export function SignupInstitute() {
                       value={formData.primaryPhone}
                       onChange={(e) =>
                         handleInputChange('primaryPhone', e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="alternatePhone"
+                      className="font-body text-primary-strong"
+                    >
+                      Alternate Number *
+                    </Label>
+                    <Input
+                      id="alternatePhone"
+                      placeholder="+91 98765 43210"
+                      className="font-body"
+                      value={formData.alternatePhone}
+                      onChange={(e) =>
+                        handleInputChange('alternatePhone', e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="address"
+                      className="font-body text-primary-strong"
+                    >
+                      Address *
+                    </Label>
+                    <Input
+                      id="address"
+                      placeholder="Address"
+                      className="font-body"
+                      value={formData.address}
+                      onChange={(e) =>
+                        handleInputChange('address', e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="city"
+                      className="font-body text-primary-strong"
+                    >
+                      City *
+                    </Label>
+                    <Input
+                      id="city"
+                      placeholder="City"
+                      className="font-body"
+                      value={formData.city}
+                      onChange={(e) =>
+                        handleInputChange('city', e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="state"
+                      className="font-body text-primary-strong"
+                    >
+                      State *
+                    </Label>
+                    <Input
+                      id="state"
+                      placeholder="State"
+                      className="font-body"
+                      value={formData.state}
+                      onChange={(e) =>
+                        handleInputChange('state', e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="country"
+                      className="font-body text-primary-strong"
+                    >
+                      Country *
+                    </Label>
+                    <Input
+                      id="country"
+                      placeholder="Country"
+                      className="font-body"
+                      value={formData.country}
+                      onChange={(e) =>
+                        handleInputChange('country', e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="pincode"
+                      className="font-body text-primary-strong"
+                    >
+                      Pincode *
+                    </Label>
+                    <Input
+                      id="pincode"
+                      placeholder="Pincode"
+                      className="font-body"
+                      value={formData.pincode}
+                      onChange={(e) =>
+                        handleInputChange('pincode', e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="collegeId"
+                      className="font-body text-primary-strong"
+                    >
+                      College Id *
+                    </Label>
+                    <Input
+                      id="collegeId"
+                      placeholder="College Id"
+                      className="font-body"
+                      value={formData.collegeId}
+                      onChange={(e) =>
+                        handleInputChange('collegeId', e.target.value)
                       }
                       required
                     />
@@ -453,7 +537,7 @@ export function SignupInstitute() {
                 <Checkbox
                   id="agreeTerms"
                   checked={formData.agreeTerms}
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={(checked: boolean) =>
                     handleInputChange('agreeTerms', checked as boolean)
                   }
                 />
@@ -471,6 +555,10 @@ export function SignupInstitute() {
                   </a>
                 </Label>
               </div>
+
+              <p className="font-body text-xs text-red-600 mt-1">
+                {Object.values(validationErrors).join('  ,')}
+              </p>
 
               <Button
                 type="submit"

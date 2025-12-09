@@ -1,13 +1,13 @@
 import { Route, Routes, BrowserRouter } from 'react-router';
 import { HOME, LOGIN, SIGNIN, SIGNUP } from '../constants/ROUTES';
 import { PreLoginRoot } from './PreLoginRoot';
-import { LandingPage } from '../pages/landing/LandingPage';
-import { LoginPage } from '../pages/login/LoginPage';
+import { LandingPage } from '../features/landing/LandingPage';
+import { LoginPage } from '../features/login/LoginPage';
 import App from '../App';
-import { SignUpPage } from '../pages/signup/SignUpPage';
-import { SignupStudent } from '../pages/signup/SignupStudent';
-import { SignupInstitute } from '../pages/signup/SignupInstitute';
-import { Counter } from '../pages/counter/Counter';
+import { SignUpPage } from '../features/signup/SignUpPage';
+import { SignupStudent } from '../features/signup/SignupStudent';
+import { SignupInstitute } from '../features/signup/SignupInstitute';
+import { Counter } from '../features/counter/Counter';
 
 export const AppRoutes = () => {
   return (

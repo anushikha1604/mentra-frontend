@@ -1,16 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../pages/counter/counterSlice';
-import { loginSliceAPI } from '../pages/login/loginSliceAPI';
-import { userSlice } from '../pages/login/userSlice';
+import counterReducer from '../features/counter/counterSlice';
+import { loginSliceAPI } from '../features/login/loginSliceAPI';
+import { userSlice } from '../features/login/userSlice';
+import { instituteSlice } from '../features/signup/instituteSlice';
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     [userSlice.reducerPath]: userSlice.reducer,
     [loginSliceAPI.reducerPath]: loginSliceAPI.reducer,
+    [instituteSlice.reducerPath]: instituteSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(loginSliceAPI.middleware);
+    return getDefaultMiddleware().concat(
+      loginSliceAPI.middleware,
+      instituteSlice.middleware
+    );
   },
 });
 
