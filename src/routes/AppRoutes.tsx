@@ -7,6 +7,7 @@ import App from '../App';
 import { SignUpPage } from '../pages/signup/SignUpPage';
 import { SignupStudent } from '../pages/signup/SignupStudent';
 import { SignupInstitute } from '../pages/signup/SignupInstitute';
+import { Counter } from '../pages/counter/Counter';
 
 export const AppRoutes = () => {
   return (
@@ -19,6 +20,7 @@ export const AppRoutes = () => {
           <Route path={SIGNUP} element={<SignUpPage />} />
           <Route path="/signup/student" element={<SignupStudent />} />
           <Route path="/signup/institute" element={<SignupInstitute />} />
+          <Route path="/counter" element={<Counter />} />
         </Route>
       </Routes>
     </BrowserRouter>

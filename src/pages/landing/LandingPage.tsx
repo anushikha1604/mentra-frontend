@@ -37,11 +37,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router';
 
-interface LandingPageProps {
-  onNavigate: (page: string) => void;
-}
-
-export function LandingPage({ onNavigate }: LandingPageProps) {
+export function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const studentFeatures = [
@@ -175,11 +171,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
               <Link to="/login" className="font-body font-medium">
                 Log In
               </Link>
-              <Link
-                to="signup"
-                onClick={() => onNavigate('signup')}
-                className="font-body font-medium"
-              >
+              <Link to="signup" className="font-body font-medium">
                 Sign Up
               </Link>
               <Button
@@ -245,20 +237,12 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                   Contact
                 </a>
                 <div className="flex flex-col space-y-2 pt-4 border-t">
-                  <Button
-                    variant="outline"
-                    onClick={() => onNavigate('login')}
-                    className="w-full"
-                  >
+                  <Link to="/login" className="w-full">
                     Log In
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => onNavigate('signup')}
-                    className="w-full"
-                  >
+                  </Link>
+                  <Link to="/signup" className="w-full">
                     Sign Up
-                  </Button>
+                  </Link>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700">
                     Request a Demo
                   </Button>
@@ -310,14 +294,12 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                   Request a Demo
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => onNavigate('signup')}
+                <Link
+                  to="/signup"
                   className="font-body text-lg px-8 py-4 font-medium"
                 >
                   Sign Up
-                </Button>
+                </Link>
               </div>
 
               {/* Stats */}
@@ -611,14 +593,12 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
               Request a Demo
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => onNavigate('signup')}
+            <Link
+              to="/signup"
               className="border-white text-white hover:bg-white hover:text-brand-primary font-body text-lg px-8 py-4 font-medium"
             >
               Get Started Today
-            </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -29,19 +28,17 @@ import {
 } from 'lucide-react';
 
 import { Link } from 'react-router';
+import { useAuthenticateAPIMutation } from './loginSliceAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogin } from './userSlice';
 
-interface LoginPageProps {
-  onNavigate: (page: string) => void;
-}
-
-export function LoginPage({ onNavigate }: LoginPageProps) {
+export function LoginPage() {
   const [loginData, setLoginData] = useState({
     emailOrPhone: '',
     password: '',
     rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState<{
     [key: string]: string;
@@ -49,6 +46,11 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
   const [showTwoFA, setShowTwoFA] = useState(false);
   const [twoFACode, setTwoFACode] = useState('');
   const [twoFAMethod, setTwoFAMethod] = useState<'email' | 'sms'>('email');
+
+  const [authenticateAPI, { isError, isLoading, isSuccess }] =
+    useAuthenticateAPIMutation();
+  const dispatch = useDispatch();
+  const { sessionObj } = useSelector((state) => state.userSession);
 
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
@@ -97,55 +99,25 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
       return;
     }
 
-    setIsLoading(true);
-    setError('');
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // For demo purposes, check for demo credentials
-      if (
-        loginData.emailOrPhone === 'demo@mentra.com' ||
-        loginData.emailOrPhone === 'admin@university.edu' ||
-        loginData.emailOrPhone === 'student@college.edu'
-      ) {
-        // Simulate 2FA requirement for admin accounts
-        if (loginData.emailOrPhone === 'admin@university.edu' && !showTwoFA) {
-          setShowTwoFA(true);
-          setIsLoading(false);
-          return;
-        }
-
-        // Navigate to dashboard after successful login
-        onNavigate('dashboard');
-      } else {
-        setError(
-          'Invalid credentials. Try demo@mentra.com, admin@university.edu, or student@college.edu'
-        );
-      }
-    } catch (err) {
-      setError('Login failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+    const resp = await authenticateAPI(loginData);
+    const sessionObj = resp.data?.data;
+    if (sessionObj) {
+      dispatch(userLogin(sessionObj));
     }
   };
 
   const handleTwoFASubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       if (twoFACode === '123456') {
-        onNavigate('dashboard');
+        // onNavigate('dashboard');
       } else {
         setError('Invalid verification code. Try 123456');
       }
     } catch (err) {
       setError('Verification failed. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -157,6 +129,10 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
     }
     return <User className="w-4 h-4 text-muted-light" />;
   };
+
+  if (sessionObj.isVerified) {
+    return null;
+  }
 
   if (showTwoFA) {
     return (
