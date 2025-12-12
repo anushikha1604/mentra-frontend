@@ -3,6 +3,7 @@ import './index.css';
 import { AppRoutes } from './routes/AppRoutes';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
+import * as Toast from '@radix-ui/react-toast';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>

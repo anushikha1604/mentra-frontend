@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,44 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select';
 import { Checkbox } from '../../components/ui/checkbox';
-import { Progress } from '../../components/ui/progress';
-import {
-  GraduationCap,
-  Users,
-  Shield,
-  ArrowLeft,
-  Upload,
-  Eye,
-  EyeOff,
-  CheckCircle,
-  AlertCircle,
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Building2,
-  BookOpen,
-  Heart,
-  Lock,
-  Key,
-  FileText,
-  Zap,
-  Star,
-} from 'lucide-react';
-import { Link } from 'react-router';
+import { Shield, ArrowLeft, Eye, EyeOff, Building2, Lock } from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
 import { ROLES } from '../../constants/APP';
 import { useAddAPIMutation } from './instituteSlice';
 
@@ -217,11 +185,20 @@ export function SignupInstitute() {
     }
 
     await addAPI(formData);
-    alert(
-      'Account created successfully! Please check your email for verification.'
-    );
-    // onNavigate('login');
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      isSuccess &&
+      confirm(
+        'Account created successfully! Please check your email for verification.'
+      )
+    ) {
+      navigate('/login');
+    }
+  }, [isSuccess]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
@@ -560,6 +537,13 @@ export function SignupInstitute() {
                 {Object.values(validationErrors).join('  ,')}
               </p>
 
+              {isError && (
+                <p className="font-body text-xs text-red-600 mt-1">
+                  {(error as any)?.data?.error ||
+                    'An error occurred. Please try again.'}
+                </p>
+              )}
+
               <Button
                 type="submit"
                 className="w-full bg-green-600 hover:bg-green-700 font-body text-lg py-3"
@@ -568,7 +552,7 @@ export function SignupInstitute() {
                   formData.password !== formData.confirmPassword
                 }
               >
-                Create Admin Account
+                Create Institute
               </Button>
             </form>
           </CardContent>

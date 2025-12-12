@@ -120,7 +120,6 @@ export function SignUpPage() {
             </CardContent>
           </Card>
 
-          {/* Admin Card */}
           <Card
             className="border-2 border-gray-200 hover:border-green-500 hover:shadow-xl transition-all duration-300 cursor-pointer group"
             onClick={() => handleRoleSelect('institute')}
@@ -130,7 +129,7 @@ export function SignUpPage() {
                 <Shield className="w-10 h-10 text-green-600 group-hover:text-white" />
               </div>
               <h3 className="font-heading text-2xl font-bold text-primary-strong mb-4">
-                Institution Admin
+                Institution Institute
               </h3>
               <p className="font-body text-secondary-medium mb-6 leading-relaxed">
                 Manage student databases, track placements, and access powerful
@@ -161,7 +160,7 @@ export function SignUpPage() {
                 </li>
               </ul>
               <Button className="w-full bg-green-600 hover:bg-green-700 font-body font-medium">
-                Continue as Admin
+                Continue as Institute
               </Button>
             </CardContent>
           </Card>

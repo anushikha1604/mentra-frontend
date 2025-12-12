@@ -34,9 +34,8 @@ import { userLogin } from './userSlice';
 
 export function LoginPage() {
   const [loginData, setLoginData] = useState({
-    emailOrPhone: '',
+    emailId: '',
     password: '',
-    rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -55,13 +54,13 @@ export function LoginPage() {
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
 
-    if (!loginData.emailOrPhone.trim()) {
-      errors.emailOrPhone = 'Email, phone, or username is required';
-    } else if (loginData.emailOrPhone.includes('@')) {
+    if (!loginData.emailId.trim()) {
+      errors.emailId = 'Email is required';
+    } else if (loginData.emailId.includes('@')) {
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(loginData.emailOrPhone)) {
-        errors.emailOrPhone = 'Please enter a valid email address';
+      if (!emailRegex.test(loginData.emailId)) {
+        errors.emailId = 'Please enter a valid email address';
       }
     }
 
@@ -122,9 +121,9 @@ export function LoginPage() {
   };
 
   const getInputIcon = () => {
-    if (loginData.emailOrPhone.includes('@')) {
+    if (loginData.emailId.includes('@')) {
       return <Mail className="w-4 h-4 text-muted-light" />;
-    } else if (/^\\+?[\\d\\s\\-\\(\\)]+$/.test(loginData.emailOrPhone)) {
+    } else if (/^\\+?[\\d\\s\\-\\(\\)]+$/.test(loginData.emailId)) {
       return <Phone className="w-4 h-4 text-muted-light" />;
     }
     return <User className="w-4 h-4 text-muted-light" />;
@@ -340,32 +339,32 @@ export function LoginPage() {
               {/* Email/Phone/Username Input */}
               <div className="space-y-2">
                 <Label
-                  htmlFor="emailOrPhone"
+                  htmlFor="emailId"
                   className="font-body text-primary-strong"
                 >
-                  Email, Phone, or Username
+                  Email
                 </Label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     {getInputIcon()}
                   </div>
                   <Input
-                    id="emailOrPhone"
-                    type="text"
-                    placeholder="Enter your email, phone, or username"
+                    id="emailId"
+                    type="email"
+                    placeholder="Enter your email"
                     className={`pl-10 font-body ${
-                      validationErrors.emailOrPhone ? 'border-red-500' : ''
+                      validationErrors.emailId ? 'border-red-500' : ''
                     }`}
-                    value={loginData.emailOrPhone}
+                    value={loginData.emailId}
                     onChange={(e) =>
-                      handleInputChange('emailOrPhone', e.target.value)
+                      handleInputChange('emailId', e.target.value)
                     }
                     required
                   />
                 </div>
-                {validationErrors.emailOrPhone && (
+                {validationErrors.emailId && (
                   <p className="font-body text-xs text-red-600">
-                    {validationErrors.emailOrPhone}
+                    {validationErrors.emailId}
                   </p>
                 )}
               </div>
@@ -417,7 +416,7 @@ export function LoginPage() {
               </div>
 
               {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Checkbox
                     id="rememberMe"
@@ -442,7 +441,7 @@ export function LoginPage() {
                 >
                   Forgot Password?
                 </button>
-              </div>
+              </div> */}
 
               {/* Login Button */}
               <Button

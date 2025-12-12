@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
-import { Badge } from './components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from './components/ui/card';
 import { Button } from './components/ui/button';
-import { Progress } from './components/ui/progress';
 import { Input } from './components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
-import { 
-  BarChart3, 
-  Users, 
-  Search, 
-  Calendar, 
-  BookOpen, 
-  MessageSquare, 
-  Trophy, 
-  Heart, 
+import {
+  BarChart3,
+  Users,
+  Search,
+  Calendar,
+  BookOpen,
+  MessageSquare,
+  Trophy,
+  Heart,
   FolderOpen,
   FileText,
   Settings,
@@ -45,7 +49,7 @@ import {
   CheckCircle,
   AlertCircle,
   Info,
-  HelpCircle
+  HelpCircle,
 } from 'lucide-react';
 import { ProfileManagement } from './components/ProfileManagement';
 import { JobSearchEnhanced } from './components/JobSearchEnhanced';
@@ -78,8 +82,8 @@ export default function App() {
       id: 1,
       type: 'info',
       message: 'New placement drive from TechCorp starting Monday!',
-      dismissible: true
-    }
+      dismissible: true,
+    },
   ]);
 
   useEffect(() => {
@@ -99,11 +103,13 @@ export default function App() {
         event.preventDefault();
         setSidebarOpen(!sidebarOpen);
       }
-      
+
       // Alt + S to focus search
       if (event.altKey && event.key === 's') {
         event.preventDefault();
-        const searchInput = document.querySelector('input[placeholder*="Search"]');
+        const searchInput = document.querySelector(
+          'input[placeholder*="Search"]'
+        );
         if (searchInput) {
           searchInput.focus();
         }
@@ -122,7 +128,7 @@ export default function App() {
     window.addEventListener('online', updateNetworkStatus);
     window.addEventListener('offline', updateNetworkStatus);
     document.addEventListener('keydown', handleKeyDown);
-    
+
     return () => {
       window.removeEventListener('resize', updateMobileState);
       window.removeEventListener('online', updateNetworkStatus);
@@ -135,7 +141,7 @@ export default function App() {
     try {
       setError(null);
       setIsLoading(true);
-      
+
       // Small delay to show loading state
       setTimeout(() => {
         if (page === 'dashboard') {
@@ -166,18 +172,22 @@ export default function App() {
   };
 
   const dismissAnnouncement = (id) => {
-    setAnnouncements(prev => prev.filter(announcement => announcement.id !== id));
+    setAnnouncements((prev) =>
+      prev.filter((announcement) => announcement.id !== id)
+    );
   };
 
   const renderError = () => {
     if (!error) return null;
-    
+
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
         <div className="flex items-center space-x-2">
           <AlertCircle className="w-5 h-5 text-red-600" />
           <div>
-            <h3 className="font-heading text-sm font-medium text-red-800">Error</h3>
+            <h3 className="font-heading text-sm font-medium text-red-800">
+              Error
+            </h3>
             <p className="font-body text-sm text-red-700">{error}</p>
           </div>
           <Button
@@ -195,15 +205,20 @@ export default function App() {
 
   const renderAnnouncements = () => {
     if (announcements.length === 0) return null;
-    
+
     return (
       <div className="space-y-2 mb-4">
         {announcements.map((announcement) => (
-          <div key={announcement.id} className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <div
+            key={announcement.id}
+            className="bg-blue-50 border border-blue-200 rounded-lg p-3"
+          >
             <div className="flex items-start space-x-2">
               <Info className="w-4 h-4 text-brand-primary mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <p className="font-body text-sm text-primary-strong">{announcement.message}</p>
+                <p className="font-body text-sm text-primary-strong">
+                  {announcement.message}
+                </p>
               </div>
               {announcement.dismissible && (
                 <Button
@@ -225,7 +240,7 @@ export default function App() {
 
   const renderNetworkStatus = () => {
     if (networkStatus === 'online') return null;
-    
+
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
         <div className="flex items-center space-x-2">
@@ -240,27 +255,60 @@ export default function App() {
 
   const updateBreadcrumbs = (section: string) => {
     const breadcrumbMap = {
-      'dashboard': [],
-      'profile': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Profile Management', path: 'profile' }],
-      'applications': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Application Tracker', path: 'applications' }],
-      'jobs': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Job Search', path: 'jobs' }],
-      'roadmap': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Career Roadmap', path: 'roadmap' }],
-      'resume': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Resume Builder', path: 'resume' }],
-      'portfolio': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Portfolio', path: 'portfolio' }],
-      'resources': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Career Resources', path: 'resources' }],
-      'communications': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Messages', path: 'communications' }],
-      'analytics': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Analytics', path: 'analytics' }],
-      'admin': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Admin Panel', path: 'admin' }],
-      'settings': [{ label: 'Dashboard', path: 'dashboard' }, { label: 'Settings', path: 'settings' }]
+      dashboard: [],
+      profile: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Profile Management', path: 'profile' },
+      ],
+      applications: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Application Tracker', path: 'applications' },
+      ],
+      jobs: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Job Search', path: 'jobs' },
+      ],
+      roadmap: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Career Roadmap', path: 'roadmap' },
+      ],
+      resume: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Resume Builder', path: 'resume' },
+      ],
+      portfolio: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Portfolio', path: 'portfolio' },
+      ],
+      resources: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Career Resources', path: 'resources' },
+      ],
+      communications: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Messages', path: 'communications' },
+      ],
+      analytics: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Analytics', path: 'analytics' },
+      ],
+      admin: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Admin Panel', path: 'admin' },
+      ],
+      settings: [
+        { label: 'Dashboard', path: 'dashboard' },
+        { label: 'Settings', path: 'settings' },
+      ],
     };
     setBreadcrumbs(breadcrumbMap[section] || []);
   };
 
   const renderBreadcrumbs = () => {
     if (activeSection === 'dashboard' || breadcrumbs.length === 0) return null;
-    
+
     return (
-      <nav 
+      <nav
         className="flex items-center space-x-1 md:space-x-2 text-sm text-muted-light mb-4 md:mb-6 px-1 overflow-x-auto mobile-scroll"
         aria-label="Breadcrumb navigation"
       >
@@ -275,23 +323,32 @@ export default function App() {
           <Home className="w-4 h-4 flex-shrink-0" />
           <span className="hidden sm:inline font-body">Home</span>
         </button>
-        
+
         {breadcrumbs.map((crumb, index) => (
           <React.Fragment key={index}>
-            <ChevronRight className="w-4 h-4 text-faded-subtle flex-shrink-0" aria-hidden="true" />
+            <ChevronRight
+              className="w-4 h-4 text-faded-subtle flex-shrink-0"
+              aria-hidden="true"
+            />
             <button
               onClick={() => {
                 setActiveSection(crumb.path);
                 updateBreadcrumbs(crumb.path);
               }}
               className={`min-w-fit p-1 rounded transition-colors truncate max-w-[120px] md:max-w-none font-body ${
-                index === breadcrumbs.length - 1 
-                  ? 'text-primary-strong font-medium cursor-default' 
+                index === breadcrumbs.length - 1
+                  ? 'text-primary-strong font-medium cursor-default'
                   : 'text-secondary-medium hover:text-brand-primary hover:underline'
               }`}
-              aria-label={index === breadcrumbs.length - 1 ? `Current page: ${crumb.label}` : `Go to ${crumb.label}`}
+              aria-label={
+                index === breadcrumbs.length - 1
+                  ? `Current page: ${crumb.label}`
+                  : `Go to ${crumb.label}`
+              }
               disabled={index === breadcrumbs.length - 1}
-              aria-current={index === breadcrumbs.length - 1 ? 'page' : undefined}
+              aria-current={
+                index === breadcrumbs.length - 1 ? 'page' : undefined
+              }
             >
               {crumb.label}
             </button>
@@ -303,91 +360,91 @@ export default function App() {
 
   const navigationItems = [
     // Core Features - Level 1
-    { 
-      id: 'dashboard', 
-      label: 'Dashboard', 
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
       icon: BarChart3,
       description: 'Overview of your placement journey',
-      category: 'main'
+      category: 'main',
     },
-    { 
-      id: 'profile', 
-      label: 'My Profile', 
+    {
+      id: 'profile',
+      label: 'My Profile',
       icon: User,
       description: 'Manage your academic and professional details',
-      category: 'main'
+      category: 'main',
     },
-    { 
-      id: 'jobs', 
-      label: 'Find Jobs', 
+    {
+      id: 'jobs',
+      label: 'Find Jobs',
       icon: Search,
       description: 'Discover opportunities that match your skills',
-      category: 'main'
+      category: 'main',
     },
-    { 
-      id: 'applications', 
-      label: 'My Applications', 
+    {
+      id: 'applications',
+      label: 'My Applications',
       icon: FileText,
       description: 'Track your job application progress',
-      category: 'main'
+      category: 'main',
     },
-    
+
     // Career Tools - Level 2
-    { 
-      id: 'resume', 
-      label: 'Resume Builder', 
+    {
+      id: 'resume',
+      label: 'Resume Builder',
       icon: FileText,
       description: 'Create professional resumes',
-      category: 'tools'
+      category: 'tools',
     },
-    { 
-      id: 'portfolio', 
-      label: 'Portfolio', 
+    {
+      id: 'portfolio',
+      label: 'Portfolio',
       icon: FolderOpen,
       description: 'Showcase your projects and achievements',
-      category: 'tools'
+      category: 'tools',
     },
-    { 
-      id: 'roadmap', 
-      label: 'Career Roadmap', 
+    {
+      id: 'roadmap',
+      label: 'Career Roadmap',
       icon: Target,
       description: 'Plan your path to dream companies',
-      category: 'tools'
+      category: 'tools',
     },
-    
+
     // Resources & Communication - Level 3
-    { 
-      id: 'resources', 
-      label: 'Career Resources', 
+    {
+      id: 'resources',
+      label: 'Career Resources',
       icon: BookOpen,
       description: 'Learning materials and career guidance',
-      category: 'support'
+      category: 'support',
     },
-    { 
-      id: 'communications', 
-      label: 'Messages', 
+    {
+      id: 'communications',
+      label: 'Messages',
       icon: MessageSquare,
       description: 'Connect with recruiters and peers',
       category: 'support',
-      badge: 3
+      badge: 3,
     },
-    { 
-      id: 'analytics', 
-      label: 'My Analytics', 
+    {
+      id: 'analytics',
+      label: 'My Analytics',
       icon: TrendingUp,
       description: 'Track your placement performance',
-      category: 'support'
-    }
+      category: 'support',
+    },
   ];
 
   const adminNavigation = [
-    { 
-      id: 'admin', 
-      label: 'Admin Panel', 
+    {
+      id: 'admin',
+      label: 'Admin Panel',
       icon: Settings,
       description: 'Manage students and placement activities',
-      category: 'admin'
-    }
+      category: 'admin',
+    },
   ];
 
   // Dashboard data with consistent branding
@@ -397,29 +454,29 @@ export default function App() {
       value: '28',
       subtitle: 'Applied this month',
       color: 'text-brand-primary',
-      bgColor: 'bg-blue-50'
+      bgColor: 'bg-blue-50',
     },
     {
-      title: 'Interviews Scheduled', 
+      title: 'Interviews Scheduled',
       value: '7',
       subtitle: 'Upcoming this week',
       color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      bgColor: 'bg-green-50',
     },
     {
       title: 'Offers Received',
       value: '4',
       subtitle: 'Total job offers',
-      color: 'text-brand-orange', 
-      bgColor: 'bg-orange-50'
+      color: 'text-brand-orange',
+      bgColor: 'bg-orange-50',
     },
     {
       title: 'Profile Views',
       value: '156',
       subtitle: 'Views this month',
       color: 'text-brand-orange',
-      bgColor: 'bg-orange-50'
-    }
+      bgColor: 'bg-orange-50',
+    },
   ];
 
   const applicationData = [
@@ -430,7 +487,7 @@ export default function App() {
     { company: 'Apple', progress: 75, status: 'Technical' },
     { company: 'Netflix', progress: 55, status: 'Applied' },
     { company: 'Tesla', progress: 95, status: 'Offer' },
-    { company: 'Adobe', progress: 35, status: 'Applied' }
+    { company: 'Adobe', progress: 35, status: 'Applied' },
   ];
 
   const skillsData = [
@@ -439,7 +496,7 @@ export default function App() {
     { skill: 'Python', level: 80 },
     { skill: 'Java', level: 75 },
     { skill: 'AWS', level: 70 },
-    { skill: 'MongoDB', level: 65 }
+    { skill: 'MongoDB', level: 65 },
   ];
 
   const usefulLinks = [
@@ -448,7 +505,7 @@ export default function App() {
     { name: 'Resume Builder', url: '#', icon: '📄' },
     { name: 'Job Portal', url: '#', icon: '🎯' },
     { name: 'Career Resources', url: '#', icon: '📚' },
-    { name: 'Mock Interviews', url: '#', icon: '🎤' }
+    { name: 'Mock Interviews', url: '#', icon: '🎤' },
   ];
 
   const renderDashboard = () => (
@@ -458,9 +515,14 @@ export default function App() {
         <CardContent className="p-4 md:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
             <div className="flex-1">
-              <h1 className="font-heading text-xl md:text-2xl font-semibold mb-2">Welcome back, Alex! 👋</h1>
-              <p className="font-body text-blue-100 text-sm md:text-base">Continue building your career profile and explore new opportunities</p>
-              
+              <h1 className="font-heading text-xl md:text-2xl font-semibold mb-2">
+                Welcome back, Alex! 👋
+              </h1>
+              <p className="font-body text-blue-100 text-sm md:text-base">
+                Continue building your career profile and explore new
+                opportunities
+              </p>
+
               {/* Quick Stats */}
               <div className="flex items-center space-x-4 mt-3 text-sm">
                 <div className="flex items-center space-x-1">
@@ -473,9 +535,9 @@ export default function App() {
                 </div>
               </div>
             </div>
-            
+
             <div className="text-center sm:text-right">
-              <div 
+              <div
                 className="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-white/30 flex items-center justify-center mb-2 cursor-pointer hover:bg-white/10 transition-all duration-200 mx-auto sm:mx-0 hover:scale-105"
                 onClick={() => {
                   setActiveSection('profile');
@@ -492,10 +554,14 @@ export default function App() {
                   }
                 }}
               >
-                <span className="font-heading text-lg md:text-xl font-bold">78%</span>
+                <span className="font-heading text-lg md:text-xl font-bold">
+                  78%
+                </span>
               </div>
-              <p className="font-body text-xs text-blue-100">Profile Complete</p>
-              <button 
+              <p className="font-body text-xs text-blue-100">
+                Profile Complete
+              </p>
+              <button
                 className="font-body text-xs text-white underline hover:no-underline mt-1 focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-1"
                 onClick={() => {
                   setActiveSection('profile');
@@ -513,8 +579,8 @@ export default function App() {
       {/* Enhanced Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {stats.map((stat, index) => (
-          <Card 
-            key={index} 
+          <Card
+            key={index}
             className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group focus-within:ring-2 focus-within:ring-blue-500/20"
             role="button"
             tabIndex={0}
@@ -535,19 +601,29 @@ export default function App() {
           >
             <CardContent className="p-4 md:p-6">
               <div className="flex items-start justify-between mb-3 md:mb-4">
-                <div className={`p-2 md:p-3 rounded-lg ${stat.bgColor} group-hover:scale-105 transition-transform duration-200`}>
+                <div
+                  className={`p-2 md:p-3 rounded-lg ${stat.bgColor} group-hover:scale-105 transition-transform duration-200`}
+                >
                   <div className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center">
-                    {stat.title.includes('Applications') && <FileText className={`w-full h-full ${stat.color}`} />}
-                    {stat.title.includes('Interviews') && <Calendar className={`w-full h-full ${stat.color}`} />}
-                    {stat.title.includes('Offers') && <Award className={`w-full h-full ${stat.color}`} />}
-                    {stat.title.includes('Profile') && <TrendingUp className={`w-full h-full ${stat.color}`} />}
+                    {stat.title.includes('Applications') && (
+                      <FileText className={`w-full h-full ${stat.color}`} />
+                    )}
+                    {stat.title.includes('Interviews') && (
+                      <Calendar className={`w-full h-full ${stat.color}`} />
+                    )}
+                    {stat.title.includes('Offers') && (
+                      <Award className={`w-full h-full ${stat.color}`} />
+                    )}
+                    {stat.title.includes('Profile') && (
+                      <TrendingUp className={`w-full h-full ${stat.color}`} />
+                    )}
                   </div>
                 </div>
                 <div className="text-faded-subtle group-hover:text-muted-light transition-colors">
                   <TrendingUp className="w-4 h-4" />
                 </div>
               </div>
-              
+
               <div>
                 <div className="font-heading text-xl md:text-2xl font-bold text-primary-strong mb-1 flex items-center gap-2">
                   {stat.value}
@@ -556,10 +632,14 @@ export default function App() {
                     +12%
                   </span>
                 </div>
-                <div className="font-heading text-sm font-medium text-primary-strong mb-1 leading-tight">{stat.title}</div>
-                <div className="font-body text-xs text-muted-light leading-relaxed">{stat.subtitle}</div>
+                <div className="font-heading text-sm font-medium text-primary-strong mb-1 leading-tight">
+                  {stat.title}
+                </div>
+                <div className="font-body text-xs text-muted-light leading-relaxed">
+                  {stat.subtitle}
+                </div>
               </div>
-              
+
               {/* Progress indicator for relevant cards */}
               {stat.title.includes('Profile') && (
                 <div className="mt-3 pt-3 border-t border-gray-100">
@@ -568,7 +648,10 @@ export default function App() {
                     <span className="font-body">78%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div className="bg-brand-primary h-1.5 rounded-full transition-all duration-300" style={{ width: '78%' }}></div>
+                    <div
+                      className="bg-brand-primary h-1.5 rounded-full transition-all duration-300"
+                      style={{ width: '78%' }}
+                    ></div>
                   </div>
                 </div>
               )}
@@ -583,11 +666,15 @@ export default function App() {
           <CardHeader className="pb-3 md:pb-4">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="font-heading text-lg font-semibold text-primary-strong">Application Progress</CardTitle>
-                <CardDescription className="font-body text-sm text-secondary-medium">Track your job application status</CardDescription>
+                <CardTitle className="font-heading text-lg font-semibold text-primary-strong">
+                  Application Progress
+                </CardTitle>
+                <CardDescription className="font-body text-sm text-secondary-medium">
+                  Track your job application status
+                </CardDescription>
               </div>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => {
                   setActiveSection('applications');
@@ -603,8 +690,8 @@ export default function App() {
           <CardContent className="pt-0">
             <div className="space-y-3 md:space-y-4">
               {applicationData.slice(0, 6).map((app, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="flex items-center justify-between p-2 -mx-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                   onClick={() => {
                     setActiveSection('applications');
@@ -622,26 +709,43 @@ export default function App() {
                   }}
                 >
                   <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                      app.progress >= 80 ? 'bg-green-100' : 
-                      app.progress >= 50 ? 'bg-yellow-100' : 'bg-blue-100'
-                    }`}>
-                      <Building2 className={`w-4 h-4 ${
-                        app.progress >= 80 ? 'text-green-600' : 
-                        app.progress >= 50 ? 'text-yellow-600' : 'text-brand-primary'
-                      }`} />
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        app.progress >= 80
+                          ? 'bg-green-100'
+                          : app.progress >= 50
+                          ? 'bg-yellow-100'
+                          : 'bg-blue-100'
+                      }`}
+                    >
+                      <Building2
+                        className={`w-4 h-4 ${
+                          app.progress >= 80
+                            ? 'text-green-600'
+                            : app.progress >= 50
+                            ? 'text-yellow-600'
+                            : 'text-brand-primary'
+                        }`}
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-body text-sm font-medium text-primary-strong truncate">{app.company}</div>
-                      <div className="font-body text-xs text-muted-light">{app.status}</div>
+                      <div className="font-body text-sm font-medium text-primary-strong truncate">
+                        {app.company}
+                      </div>
+                      <div className="font-body text-xs text-muted-light">
+                        {app.status}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2 flex-shrink-0">
                     <div className="w-16 md:w-20 bg-gray-200 rounded-full h-2">
-                      <div 
+                      <div
                         className={`h-2 rounded-full transition-all duration-300 ${
-                          app.progress >= 80 ? 'bg-green-500' : 
-                          app.progress >= 50 ? 'bg-yellow-500' : 'bg-brand-primary'
+                          app.progress >= 80
+                            ? 'bg-green-500'
+                            : app.progress >= 50
+                            ? 'bg-yellow-500'
+                            : 'bg-brand-primary'
                         }`}
                         style={{ width: `${app.progress}%` }}
                         role="progressbar"
@@ -651,11 +755,13 @@ export default function App() {
                         aria-label={`Application progress: ${app.progress}%`}
                       ></div>
                     </div>
-                    <span className="font-body text-xs text-muted-light w-8 text-right">{app.progress}%</span>
+                    <span className="font-body text-xs text-muted-light w-8 text-right">
+                      {app.progress}%
+                    </span>
                   </div>
                 </div>
               ))}
-              
+
               {applicationData.length > 6 && (
                 <button
                   onClick={() => {
@@ -674,8 +780,12 @@ export default function App() {
         {/* Student Profile Info */}
         <Card className="bg-white border border-gray-200 shadow-sm">
           <CardHeader>
-            <CardTitle className="font-heading text-lg font-semibold text-primary-strong">Student Profile</CardTitle>
-            <CardDescription className="font-body text-sm text-secondary-medium">Your academic and professional details</CardDescription>
+            <CardTitle className="font-heading text-lg font-semibold text-primary-strong">
+              Student Profile
+            </CardTitle>
+            <CardDescription className="font-body text-sm text-secondary-medium">
+              Your academic and professional details
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-start space-x-4 mb-6">
@@ -685,25 +795,41 @@ export default function App() {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h3 className="font-heading text-lg font-semibold text-primary-strong">Alex Thompson</h3>
-                <p className="font-body text-sm text-secondary-medium">Computer Science Engineering</p>
-                <p className="font-body text-sm text-secondary-medium">Batch: 2024</p>
-                <p className="font-body text-sm text-secondary-medium">CGPA: 8.7/10</p>
-                <p className="font-body text-sm text-secondary-medium">📱 +91 9876543210</p>
+                <h3 className="font-heading text-lg font-semibold text-primary-strong">
+                  Alex Thompson
+                </h3>
+                <p className="font-body text-sm text-secondary-medium">
+                  Computer Science Engineering
+                </p>
+                <p className="font-body text-sm text-secondary-medium">
+                  Batch: 2024
+                </p>
+                <p className="font-body text-sm text-secondary-medium">
+                  CGPA: 8.7/10
+                </p>
+                <p className="font-body text-sm text-secondary-medium">
+                  📱 +91 9876543210
+                </p>
               </div>
             </div>
-            
+
             <div className="space-y-3">
-              <h4 className="font-heading text-sm font-semibold text-primary-strong">Skills Progress</h4>
+              <h4 className="font-heading text-sm font-semibold text-primary-strong">
+                Skills Progress
+              </h4>
               {skillsData.map((skill, index) => (
                 <div key={index} className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="font-body text-secondary-medium font-medium">{skill.skill}</span>
-                    <span className="font-body text-muted-light">{skill.level}%</span>
+                    <span className="font-body text-secondary-medium font-medium">
+                      {skill.skill}
+                    </span>
+                    <span className="font-body text-muted-light">
+                      {skill.level}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-green-600 h-2 rounded-full transition-all duration-300" 
+                    <div
+                      className="bg-green-600 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${skill.level}%` }}
                     ></div>
                   </div>
@@ -717,8 +843,12 @@ export default function App() {
       {/* Quick Actions & Useful Links */}
       <Card className="bg-white border border-gray-200 shadow-sm">
         <CardHeader className="pb-3 md:pb-4">
-          <CardTitle className="font-heading text-lg font-semibold text-primary-strong">Quick Actions</CardTitle>
-          <CardDescription className="font-body text-sm text-secondary-medium">Fast access to important features and resources</CardDescription>
+          <CardTitle className="font-heading text-lg font-semibold text-primary-strong">
+            Quick Actions
+          </CardTitle>
+          <CardDescription className="font-body text-sm text-secondary-medium">
+            Fast access to important features and resources
+          </CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
@@ -756,12 +886,12 @@ export default function App() {
               </button>
             ))}
           </div>
-          
+
           {/* Additional Mobile Quick Actions */}
           <div className="mt-4 pt-4 border-t border-gray-100 lg:hidden">
             <div className="flex space-x-2">
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 className="flex-1 bg-brand-primary hover:bg-blue-700 font-body"
                 onClick={() => {
                   setActiveSection('jobs');
@@ -771,9 +901,9 @@ export default function App() {
                 <Search className="w-4 h-4 mr-2" />
                 Find Jobs
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="flex-1 font-body"
                 onClick={() => {
                   setActiveSection('profile');
@@ -870,9 +1000,16 @@ export default function App() {
       return (
         <div className="text-center py-12">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h3 className="font-heading text-lg font-medium text-primary-strong mb-2">Something went wrong</h3>
-          <p className="font-body text-secondary-medium mb-4">We're having trouble loading this section.</p>
-          <Button onClick={() => setActiveSection('dashboard')} className="font-body">
+          <h3 className="font-heading text-lg font-medium text-primary-strong mb-2">
+            Something went wrong
+          </h3>
+          <p className="font-body text-secondary-medium mb-4">
+            We're having trouble loading this section.
+          </p>
+          <Button
+            onClick={() => setActiveSection('dashboard')}
+            className="font-body"
+          >
             Go to Dashboard
           </Button>
         </div>
@@ -898,11 +1035,15 @@ export default function App() {
     return (
       <div className="min-h-screen bg-background flex">
         {/* Enhanced Responsive Sidebar */}
-        <div 
+        <div
           className={`
             fixed inset-y-0 left-0 z-50 w-72 md:w-64 bg-mentra-blue transform transition-transform duration-300 ease-in-out
             md:relative md:transform-none md:translate-x-0
-            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+            ${
+              sidebarOpen
+                ? 'translate-x-0'
+                : '-translate-x-full md:translate-x-0'
+            }
             shadow-2xl md:shadow-none
           `}
           role="navigation"
@@ -914,7 +1055,9 @@ export default function App() {
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-brand-primary" />
               </div>
-              <span className="font-heading text-white font-semibold text-lg">Mentra</span>
+              <span className="font-heading text-white font-semibold text-lg">
+                Mentra
+              </span>
             </div>
             <Button
               variant="ghost"
@@ -934,51 +1077,56 @@ export default function App() {
                 Main
               </h3>
               <div className="space-y-1">
-                {navigationItems.filter(item => item.category === 'main').map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-                  
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        try {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                          updateBreadcrumbs(item.id);
-                          setError(null);
-                        } catch (error) {
-                          console.error('Navigation error:', error);
-                          setError(`Failed to navigate to ${item.label}`);
-                        }
-                      }}
-                      className={`
+                {navigationItems
+                  .filter((item) => item.category === 'main')
+                  .map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeSection === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          try {
+                            setActiveSection(item.id);
+                            setSidebarOpen(false);
+                            updateBreadcrumbs(item.id);
+                            setError(null);
+                          } catch (error) {
+                            console.error('Navigation error:', error);
+                            setError(`Failed to navigate to ${item.label}`);
+                          }
+                        }}
+                        className={`
                         group w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-all duration-200
-                        ${isActive 
-                          ? 'bg-brand-orange text-white shadow-lg' 
-                          : 'text-blue-100 hover:bg-blue-700 hover:text-white'
+                        ${
+                          isActive
+                            ? 'bg-brand-orange text-white shadow-lg'
+                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
                         }
                       `}
-                      aria-label={item.description}
-                      title={item.description}
-                    >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <span className="font-body font-medium block truncate">{item.label}</span>
-                        {!isActive && (
-                          <span className="font-body text-xs text-blue-200 group-hover:text-blue-100 block truncate">
-                            {item.description}
+                        aria-label={item.description}
+                        title={item.description}
+                      >
+                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <span className="font-body font-medium block truncate">
+                            {item.label}
+                          </span>
+                          {!isActive && (
+                            <span className="font-body text-xs text-blue-200 group-hover:text-blue-100 block truncate">
+                              {item.description}
+                            </span>
+                          )}
+                        </div>
+                        {item.badge && (
+                          <span className="bg-red-500 text-white font-body text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
+                            {item.badge}
                           </span>
                         )}
-                      </div>
-                      {item.badge && (
-                        <span className="bg-red-500 text-white font-body text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
-                          {item.badge}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })}
               </div>
             </div>
 
@@ -988,41 +1136,46 @@ export default function App() {
                 Career Tools
               </h3>
               <div className="space-y-1">
-                {navigationItems.filter(item => item.category === 'tools').map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-                  
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        try {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                          updateBreadcrumbs(item.id);
-                          setError(null);
-                        } catch (error) {
-                          console.error('Navigation error:', error);
-                          setError(`Failed to navigate to ${item.label}`);
-                        }
-                      }}
-                      className={`
+                {navigationItems
+                  .filter((item) => item.category === 'tools')
+                  .map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeSection === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          try {
+                            setActiveSection(item.id);
+                            setSidebarOpen(false);
+                            updateBreadcrumbs(item.id);
+                            setError(null);
+                          } catch (error) {
+                            console.error('Navigation error:', error);
+                            setError(`Failed to navigate to ${item.label}`);
+                          }
+                        }}
+                        className={`
                         group w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200
-                        ${isActive 
-                          ? 'bg-brand-orange text-white shadow-lg' 
-                          : 'text-blue-100 hover:bg-blue-700 hover:text-white'
+                        ${
+                          isActive
+                            ? 'bg-brand-orange text-white shadow-lg'
+                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
                         }
                       `}
-                      aria-label={item.description}
-                      title={item.description}
-                    >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <span className="font-body font-medium block truncate">{item.label}</span>
-                      </div>
-                    </button>
-                  );
-                })}
+                        aria-label={item.description}
+                        title={item.description}
+                      >
+                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <span className="font-body font-medium block truncate">
+                            {item.label}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
               </div>
             </div>
 
@@ -1032,46 +1185,51 @@ export default function App() {
                 Support
               </h3>
               <div className="space-y-1">
-                {navigationItems.filter(item => item.category === 'support').map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-                  
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        try {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                          updateBreadcrumbs(item.id);
-                          setError(null);
-                        } catch (error) {
-                          console.error('Navigation error:', error);
-                          setError(`Failed to navigate to ${item.label}`);
-                        }
-                      }}
-                      className={`
+                {navigationItems
+                  .filter((item) => item.category === 'support')
+                  .map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeSection === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          try {
+                            setActiveSection(item.id);
+                            setSidebarOpen(false);
+                            updateBreadcrumbs(item.id);
+                            setError(null);
+                          } catch (error) {
+                            console.error('Navigation error:', error);
+                            setError(`Failed to navigate to ${item.label}`);
+                          }
+                        }}
+                        className={`
                         group w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200
-                        ${isActive 
-                          ? 'bg-brand-orange text-white shadow-lg' 
-                          : 'text-blue-100 hover:bg-blue-700 hover:text-white'
+                        ${
+                          isActive
+                            ? 'bg-brand-orange text-white shadow-lg'
+                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
                         }
                       `}
-                      aria-label={item.description}
-                      title={item.description}
-                    >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <span className="font-body font-medium block truncate">{item.label}</span>
-                      </div>
-                      {item.badge && (
-                        <span className="bg-red-500 text-white font-body text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
-                          {item.badge}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+                        aria-label={item.description}
+                        title={item.description}
+                      >
+                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <span className="font-body font-medium block truncate">
+                            {item.label}
+                          </span>
+                        </div>
+                        {item.badge && (
+                          <span className="bg-red-500 text-white font-body text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
+                            {item.badge}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
               </div>
             </div>
 
@@ -1084,7 +1242,7 @@ export default function App() {
                 {adminNavigation.map((item) => {
                   const Icon = item.icon;
                   const isActive = activeSection === item.id;
-                  
+
                   return (
                     <button
                       key={item.id}
@@ -1100,9 +1258,10 @@ export default function App() {
                       }}
                       className={`
                         group w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200
-                        ${isActive 
-                          ? 'bg-brand-orange text-white shadow-lg' 
-                          : 'text-blue-100 hover:bg-blue-700 hover:text-white'
+                        ${
+                          isActive
+                            ? 'bg-brand-orange text-white shadow-lg'
+                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
                         }
                       `}
                       aria-label={item.description}
@@ -1110,7 +1269,9 @@ export default function App() {
                     >
                       <Icon className="w-5 h-5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <span className="font-body font-medium block truncate">{item.label}</span>
+                        <span className="font-body font-medium block truncate">
+                          {item.label}
+                        </span>
                       </div>
                     </button>
                   );
@@ -1135,9 +1296,10 @@ export default function App() {
               }}
               className={`
                 w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-colors font-body
-                ${activeSection === 'settings'
-                  ? 'bg-brand-orange text-white' 
-                  : 'text-blue-100 hover:bg-blue-700 hover:text-white'
+                ${
+                  activeSection === 'settings'
+                    ? 'bg-brand-orange text-white'
+                    : 'text-blue-100 hover:bg-blue-700 hover:text-white'
                 }
               `}
             >
@@ -1156,7 +1318,7 @@ export default function App() {
 
         {/* Mobile Overlay */}
         {sidebarOpen && (
-          <div 
+          <div
             className="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden"
             onClick={() => setSidebarOpen(false)}
           />
@@ -1176,7 +1338,7 @@ export default function App() {
               >
                 <Menu className="w-6 h-6" />
               </Button>
-              
+
               {/* Search - Hidden on mobile, shown on tablet+ */}
               <div className="relative hidden sm:block flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-light" />
@@ -1202,8 +1364,8 @@ export default function App() {
             <div className="flex items-center space-x-2 md:space-x-4">
               {/* Quick Action Buttons - Responsive */}
               <div className="hidden lg:flex items-center space-x-2">
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   className="bg-brand-primary hover:bg-blue-700 font-body font-medium"
                   onClick={() => {
                     setActiveSection('jobs');
@@ -1213,8 +1375,8 @@ export default function App() {
                 >
                   Apply Now
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   className="font-body"
                   onClick={() => {
@@ -1229,8 +1391,8 @@ export default function App() {
 
               {/* Mobile Quick Actions */}
               <div className="lg:hidden flex items-center space-x-1">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   className="min-h-[44px] min-w-[44px] p-2"
                   onClick={() => {
@@ -1244,9 +1406,9 @@ export default function App() {
               </div>
 
               {/* Notification Bell with Count */}
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="relative min-h-[44px] min-w-[44px] p-2"
                 aria-label="View notifications (7 unread)"
                 onClick={() => {
@@ -1259,7 +1421,7 @@ export default function App() {
                   7
                 </div>
               </Button>
-              
+
               {/* User Profile Section */}
               <div className="flex items-center space-x-2 md:space-x-3">
                 <Avatar className="w-8 h-8 md:w-10 md:h-10 cursor-pointer hover:ring-2 hover:ring-blue-200 transition-all">
@@ -1267,17 +1429,23 @@ export default function App() {
                     AT
                   </AvatarFallback>
                 </Avatar>
-                
+
                 {/* User Info - Hidden on mobile */}
                 <div className="hidden md:block">
-                  <div className="font-body text-sm font-semibold text-primary-strong">Alex Thompson</div>
-                  <div className="font-body text-xs text-muted-light">Student</div>
-                  <div className="font-body text-xs text-faded-subtle">Last login: 2 hours ago</div>
+                  <div className="font-body text-sm font-semibold text-primary-strong">
+                    Alex Thompson
+                  </div>
+                  <div className="font-body text-xs text-muted-light">
+                    Student
+                  </div>
+                  <div className="font-body text-xs text-faded-subtle">
+                    Last login: 2 hours ago
+                  </div>
                 </div>
-                
+
                 {/* Logout Button */}
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={() => handleNavigation('logout')}
                   className="text-faded-subtle hover:text-red-500 min-h-[44px] min-w-[44px] p-2"
@@ -1296,36 +1464,48 @@ export default function App() {
               {renderNetworkStatus()}
               {renderAnnouncements()}
               {renderError()}
-              
+
               {/* Breadcrumb Navigation */}
               {renderBreadcrumbs()}
-              
+
               {/* Skip Link for Accessibility */}
-              <a 
-                href="#main-content" 
+              <a
+                href="#main-content"
                 className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-primary text-white px-4 py-2 rounded-lg z-50 font-body"
               >
                 Skip to main content
               </a>
-              
+
               {/* Loading State */}
               {isLoading ? (
-                <div className="flex items-center justify-center min-h-[60vh]" role="status" aria-live="polite">
+                <div
+                  className="flex items-center justify-center min-h-[60vh]"
+                  role="status"
+                  aria-live="polite"
+                >
                   <div className="text-center">
                     <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <h3 className="font-heading text-lg font-medium text-primary-strong mb-2">Loading...</h3>
-                    <p className="font-body text-secondary-medium mb-4">Please wait while we prepare your content</p>
+                    <h3 className="font-heading text-lg font-medium text-primary-strong mb-2">
+                      Loading...
+                    </h3>
+                    <p className="font-body text-secondary-medium mb-4">
+                      Please wait while we prepare your content
+                    </p>
                     <div className="flex items-center justify-center space-x-1">
                       <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></div>
-                      <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                      <div
+                        className="w-2 h-2 bg-brand-primary rounded-full animate-pulse"
+                        style={{ animationDelay: '0.1s' }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-brand-primary rounded-full animate-pulse"
+                        style={{ animationDelay: '0.2s' }}
+                      ></div>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div id="main-content">
-                  {renderActiveSection()}
-                </div>
+                <div id="main-content">{renderActiveSection()}</div>
               )}
             </div>
           </main>
