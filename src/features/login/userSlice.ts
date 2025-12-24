@@ -20,4 +20,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { userLogin } = userSlice.actions;
+export const { userLogin, userLogOut } = userSlice.actions;

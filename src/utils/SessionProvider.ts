@@ -1,14 +1,40 @@
-import StorageProvider from "./StorageProvider";
+import StorageProvider from './StorageProvider';
 
-const AUTH = "AUTH";
+const AUTH = 'AUTH';
+
+interface UserDetails {
+  _id: string;
+  userId: string;
+  fullName: string;
+  emailId: string;
+  primaryPhone: string;
+  alternatePhone: string;
+  password: string;
+  role: string;
+  collageId: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  createdBy: string;
+  updatedBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface SessionObj {
+  message: string;
+  token: string;
+  userDetails: UserDetails;
+}
 
 export default class SessionProvider {
+  storage: Storage;
   constructor() {
-    this.extendSession = this.extendSession.bind(this);
     this.storage = window.sessionStorage;
   }
 
-  static createSession(obj) {
+  static createSession(obj: SessionObj) {
     StorageProvider.set(AUTH, obj);
   }
 
@@ -20,36 +46,57 @@ export default class SessionProvider {
     return null;
   }
 
-  static getSessionVal(key) {
-    const obj = StorageProvider.get(AUTH);
-    if (obj) {
-      return obj[key];
-    }
-    return null;
+  static getUserObject() {
+    return SessionProvider.getSession().userDetails;
   }
 
-  static isAuthenticated() {
-    return SessionProvider.getSessionVal("isVerified");
+  static getUserId() {
+    return SessionProvider.getUserObject()._id;
   }
 
-  static getEmail() {
-    return SessionProvider.getSessionVal("email");
+  static getFullName() {
+    return SessionProvider.getUserObject().fullName;
   }
 
-  static getUserName() {
-    return SessionProvider.getSessionVal("userName");
+  static getEmailId() {
+    return SessionProvider.getUserObject().emailId;
+  }
+
+  static getPrimaryPhone() {
+    return SessionProvider.getUserObject().primaryPhone;
+  }
+
+  static getAlternatePhone() {
+    return SessionProvider.getUserObject().alternatePhone;
+  }
+
+  static getRole() {
+    return SessionProvider.getUserObject().role;
+  }
+
+  static getCollageId() {
+    return SessionProvider.getUserObject().collageId;
+  }
+
+  static getCity() {
+    return SessionProvider.getUserObject().city;
+  }
+
+  static getState() {
+    return SessionProvider.getUserObject().state;
+  }
+
+  static getCountry() {
+    return SessionProvider.getUserObject().country;
+  }
+
+  static getPincode() {
+    return SessionProvider.getUserObject().pincode;
   }
 
   static getToken() {
-    return SessionProvider.getSessionVal("jwToken");
-  }
-
-  static getID() {
-    return SessionProvider.getSessionVal("id");
-  }
-
-  static getRoles() {
-    return SessionProvider.getSessionVal("roles");
+    const session = SessionProvider.getSession();
+    return session?.token || null;
   }
 
   static deleteSession() {
@@ -63,7 +110,7 @@ export default class SessionProvider {
     StorageProvider.set(AUTH, session);
   }
 
-  static removeItem(key) {
+  static removeItem(key: string) {
     return this.storage.removeItem(key);
   }
 }

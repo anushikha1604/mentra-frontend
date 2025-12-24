@@ -27,15 +27,15 @@ import {
   Clock,
 } from 'lucide-react';
 
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useAuthenticateAPIMutation } from './loginSliceAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from './userSlice';
 
 export function LoginPage() {
   const [loginData, setLoginData] = useState({
-    emailId: '',
-    password: '',
+    emailId: 'jit@example.com',
+    password: 'strongPass123',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -91,6 +91,7 @@ export function LoginPage() {
     if (error) setError('');
   };
 
+  const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -99,9 +100,10 @@ export function LoginPage() {
     }
 
     const resp = await authenticateAPI(loginData);
-    const sessionObj = resp.data?.data;
-    if (sessionObj) {
-      dispatch(userLogin(sessionObj));
+    const { userDetails } = resp.data;
+    if (userDetails) {
+      dispatch(userLogin(resp.data));
+      navigate(`/${userDetails.role}`);
     }
   };
 
@@ -129,7 +131,7 @@ export function LoginPage() {
     return <User className="w-4 h-4 text-muted-light" />;
   };
 
-  if (sessionObj.isVerified) {
+  if (sessionObj.userDetails) {
     return null;
   }
 
