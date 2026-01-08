@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -42,7 +42,9 @@ import {
   Zap,
   Star,
 } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { ROLES } from '../../constants/APP';
+import { useAddAPIMutation } from './instituteSlice';
 
 export function SignupStudent() {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,32 +54,38 @@ export function SignupStudent() {
     [key: string]: string;
   }>({});
   const [formData, setFormData] = useState({
-    role: '',
-    // Student fields
+    studentId: '',
+    collageId: '',
     fullName: '',
+    emailId: '',
     primaryPhone: '',
     alternatePhone: '',
-    email: '',
     address: '',
     city: '',
     state: '',
+    country: '',
     pincode: '',
-    gender: '',
-    collegeId: '',
-    studentId: '',
-    collegeName: '',
+    collageName: '',
     course: '',
     year: '',
-    wishlistCompany: '',
+    DOB: '',
+    gender: '',
     password: '',
     confirmPassword: '',
+    skills: [],
+    resume: {
+      url: '',
+      filename: '',
+    },
+    role: ROLES.STUDENT,
+    appliedJobs: [],
+    wishlistCompanies: [],
+    isPlaced: false,
+    isDeleted: false,
+    isActive: true,
+    createdBy: '',
+    updatedBy: '',
     agreeTerms: false,
-    // Admin fields
-    institutionName: '',
-    officialEmail: '',
-    username: '',
-    adminRole: '',
-    accessCode: '',
   });
 
   const validateField = (field: string, value: any) => {
@@ -91,8 +99,7 @@ export function SignupStudent() {
           errors.fullName = 'Full name must be at least 2 characters';
         }
         break;
-      case 'email':
-      case 'officialEmail':
+      case 'emailId':
         if (!value.trim()) {
           errors[field] = 'Email is required';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -170,69 +177,77 @@ export function SignupStudent() {
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
 
-    if (step === 'student') {
-      // Required fields for student
-      const requiredFields = [
-        'fullName',
-        'email',
-        'primaryPhone',
-        'address',
-        'city',
-        'state',
-        'pincode',
-        'gender',
-        'collegeName',
-        'course',
-        'year',
-        'password',
-        'confirmPassword',
-      ];
+    // Required fields for student
+    const requiredFields = [
+      'fullName',
+      'emailId',
+      'primaryPhone',
+      'address',
+      'city',
+      'state',
+      'pincode',
+      'gender',
+      'collageName',
+      'course',
+      'year',
+      'password',
+      'confirmPassword',
+    ];
 
-      requiredFields.forEach((field) => {
-        if (!formData[field as keyof typeof formData]) {
-          errors[field] = `${field
-            .replace(/([A-Z])/g, ' $1')
-            .toLowerCase()} is required`;
-        }
-      });
-
-      // Additional validations
-      Object.keys(formData).forEach((field) => {
-        const fieldErrors = validateField(
-          field,
-          formData[field as keyof typeof formData]
-        );
-        Object.assign(errors, fieldErrors);
-      });
-
-      if (!formData.agreeTerms) {
-        errors.agreeTerms = 'You must agree to the terms and conditions';
+    requiredFields.forEach((field) => {
+      if (!formData[field as keyof typeof formData]) {
+        errors[field] = `${field
+          .replace(/([A-Z])/g, ' $1')
+          .toLowerCase()} is required`;
       }
+    });
 
-      if (passwordStrength < 50) {
-        errors.password =
-          'Password is too weak. Please create a stronger password.';
-      }
+    // Additional validations
+    Object.keys(formData).forEach((field) => {
+      const fieldErrors = validateField(
+        field,
+        formData[field as keyof typeof formData]
+      );
+      Object.assign(errors, fieldErrors);
+    });
+
+    if (!formData.agreeTerms) {
+      errors.agreeTerms = 'You must agree to the terms and conditions';
+    }
+
+    if (passwordStrength < 50) {
+      errors.password =
+        'Password is too weak. Please create a stronger password.';
     }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [addAPI, { error, isError, isLoading, isSuccess }] =
+    useAddAPIMutation();
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
       return;
     }
 
-    // Simulate successful registration
-    console.log('Form submitted:', formData);
-    alert(
-      'Account created successfully! Please check your email for verification.'
-    );
-    // onNavigate('login');
+    await addAPI(formData);
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      isSuccess &&
+      confirm(
+        'Account created successfully! Please check your email for verification.'
+      )
+    ) {
+      navigate('/login');
+    }
+  }, [isSuccess]);
 
   const getPasswordStrengthColor = () => {
     if (passwordStrength < 50) return 'bg-red-500';
@@ -311,27 +326,27 @@ export function SignupStudent() {
                   </div>
                   <div>
                     <Label
-                      htmlFor="email"
+                      htmlFor="emailId"
                       className="font-body text-primary-strong"
                     >
                       Email Address *
                     </Label>
                     <Input
-                      id="email"
-                      type="email"
-                      placeholder="your.email@college.edu"
+                      id="emailId"
+                      type="emailId"
+                      placeholder="your.emailId@college.edu"
                       className={`font-body ${
-                        validationErrors.email ? 'border-red-500' : ''
+                        validationErrors.emailId ? 'border-red-500' : ''
                       }`}
-                      value={formData.email}
+                      value={formData.emailId}
                       onChange={(e) =>
-                        handleInputChange('email', e.target.value)
+                        handleInputChange('emailId', e.target.value)
                       }
                       required
                     />
-                    {validationErrors.email && (
+                    {validationErrors.emailId && (
                       <p className="font-body text-xs text-red-600 mt-1">
-                        {validationErrors.email}
+                        {validationErrors.emailId}
                       </p>
                     )}
                   </div>
@@ -405,6 +420,22 @@ export function SignupStudent() {
                       </p>
                     )}
                   </div>
+                  <div>
+                    <Label
+                      htmlFor="DOB"
+                      className="font-body text-primary-strong"
+                    >
+                      DOB
+                    </Label>
+                    <Input
+                      id="DOB"
+                      placeholder="DD-MM-YYYY"
+                      type="date"
+                      className="font-body"
+                      value={formData.DOB}
+                      onChange={(e) => handleInputChange('DOB', e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -439,7 +470,7 @@ export function SignupStudent() {
                     </p>
                   )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label
                       htmlFor="city"
@@ -492,6 +523,31 @@ export function SignupStudent() {
                   </div>
                   <div>
                     <Label
+                      htmlFor="country"
+                      className="font-body text-primary-strong"
+                    >
+                      Country *
+                    </Label>
+                    <Input
+                      id="country"
+                      placeholder="Country"
+                      className={`font-body ${
+                        validationErrors.country ? 'border-red-500' : ''
+                      }`}
+                      value={formData.country}
+                      onChange={(e) =>
+                        handleInputChange('country', e.target.value)
+                      }
+                      required
+                    />
+                    {validationErrors.country && (
+                      <p className="font-body text-xs text-red-600 mt-1">
+                        {validationErrors.country}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <Label
                       htmlFor="pincode"
                       className="font-body text-primary-strong"
                     >
@@ -527,26 +583,26 @@ export function SignupStudent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label
-                      htmlFor="collegeName"
+                      htmlFor="collageName"
                       className="font-body text-primary-strong"
                     >
                       College/University Name *
                     </Label>
                     <Input
-                      id="collegeName"
+                      id="collageName"
                       placeholder="Enter your institution name"
                       className={`font-body ${
-                        validationErrors.collegeName ? 'border-red-500' : ''
+                        validationErrors.collageName ? 'border-red-500' : ''
                       }`}
-                      value={formData.collegeName}
+                      value={formData.collageName}
                       onChange={(e) =>
-                        handleInputChange('collegeName', e.target.value)
+                        handleInputChange('collageName', e.target.value)
                       }
                       required
                     />
-                    {validationErrors.collegeName && (
+                    {validationErrors.collageName && (
                       <p className="font-body text-xs text-red-600 mt-1">
-                        {validationErrors.collegeName}
+                        {validationErrors.collageName}
                       </p>
                     )}
                   </div>
@@ -637,7 +693,7 @@ export function SignupStudent() {
                 </div>
                 <div>
                   <Label
-                    htmlFor="collegeId"
+                    htmlFor="collageId"
                     className="font-body text-primary-strong"
                   >
                     College ID (Upload or Enter ID Number)
@@ -656,41 +712,13 @@ export function SignupStudent() {
                       <Input
                         placeholder="Or enter College ID number"
                         className="font-body"
-                        value={formData.collegeId}
+                        value={formData.collageId}
                         onChange={(e) =>
-                          handleInputChange('collegeId', e.target.value)
+                          handleInputChange('collageId', e.target.value)
                         }
                       />
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Career Information */}
-              <div className="space-y-4">
-                <h3 className="font-heading text-lg font-semibold text-primary-strong flex items-center gap-2">
-                  <Heart className="w-5 h-5" />
-                  Career Information
-                </h3>
-                <div>
-                  <Label
-                    htmlFor="wishlistCompany"
-                    className="font-body text-primary-strong"
-                  >
-                    Wishlist Company
-                  </Label>
-                  <Input
-                    id="wishlistCompany"
-                    placeholder="e.g., Google, Microsoft, Amazon (comma separated)"
-                    className="font-body"
-                    value={formData.wishlistCompany}
-                    onChange={(e) =>
-                      handleInputChange('wishlistCompany', e.target.value)
-                    }
-                  />
-                  <p className="font-body text-xs text-muted-light mt-1">
-                    Enter companies you'd like to work for
-                  </p>
                 </div>
               </div>
 
@@ -821,8 +849,8 @@ export function SignupStudent() {
                 <Checkbox
                   id="agreeTerms"
                   checked={formData.agreeTerms}
-                  onCheckedChange={(checked) =>
-                    handleInputChange('agreeTerms', checked as boolean)
+                  onCheckedChange={(checked: boolean) =>
+                    handleInputChange('agreeTerms', checked)
                   }
                 />
                 <Label
@@ -842,6 +870,13 @@ export function SignupStudent() {
               {validationErrors.agreeTerms && (
                 <p className="font-body text-xs text-red-600">
                   {validationErrors.agreeTerms}
+                </p>
+              )}
+
+              {isError && (
+                <p className="font-body text-xs text-red-600 mt-1">
+                  {(error as any)?.data?.error ||
+                    'An error occurred. Please try again.'}
                 </p>
               )}
 

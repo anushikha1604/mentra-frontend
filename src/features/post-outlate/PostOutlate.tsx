@@ -29,7 +29,7 @@ import {
   FileSpreadsheet,
 } from 'lucide-react';
 
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import SessionProvider from '../../utils/SessionProvider';
 import { ROLES } from '../../constants/APP';
 import { useDispatch } from 'react-redux';
@@ -243,9 +243,11 @@ export function PostOutlate() {
       : studentNavItems;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(userLogOut());
+    navigate('/login');
   };
 
   return (

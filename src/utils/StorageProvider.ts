@@ -31,7 +31,7 @@ export default class StorageProvider {
       return false;
     }
     // setting previous time to expires will delete cookie.
-    document.cookie = `${key}=;Path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;domain=site.com;`;
+    document.cookie = `${key}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
     return true;
   }
 

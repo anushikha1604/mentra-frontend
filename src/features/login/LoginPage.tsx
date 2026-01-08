@@ -469,7 +469,10 @@ export function LoginPage() {
 
         {/* User Type Indicators */}
         <div className="mt-6 grid grid-cols-2 gap-4">
-          <div className="text-center p-4 bg-white rounded-lg border border-gray-100 shadow-sm">
+          <Link
+            to="/signup/student"
+            className="text-center p-4 bg-white rounded-lg border border-gray-100 shadow-sm"
+          >
             <GraduationCap className="w-8 h-8 text-brand-primary mx-auto mb-2" />
             <p className="font-body text-sm font-medium text-primary-strong">
               Students
@@ -477,8 +480,11 @@ export function LoginPage() {
             <p className="font-body text-xs text-secondary-medium">
               Profile & career management
             </p>
-          </div>
-          <div className="text-center p-4 bg-white rounded-lg border border-gray-100 shadow-sm">
+          </Link>
+          <Link
+            to="/signup/institute"
+            className="text-center p-4 bg-white rounded-lg border border-gray-100 shadow-sm"
+          >
             <Building2 className="w-8 h-8 text-green-600 mx-auto mb-2" />
             <p className="font-body text-sm font-medium text-primary-strong">
               Institutions
@@ -486,7 +492,7 @@ export function LoginPage() {
             <p className="font-body text-xs text-secondary-medium">
               Placement management & analytics
             </p>
-          </div>
+          </Link>
         </div>
 
         {/* Security Features */}
