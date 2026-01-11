@@ -34,8 +34,8 @@ import { userLogin } from './userSlice';
 
 export function LoginPage() {
   const [loginData, setLoginData] = useState({
-    emailId: 'jit@example.com',
-    password: 'strongPass123',
+    emailId: '',
+    password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');

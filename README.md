@@ -12,3 +12,8 @@ mentra
 
 aarav.sharma12@example.com
 StrongPass123
+
+const [loginData, setLoginData] = useState({
+emailId: 'jit@example.com',
+password: 'strongPass123',
+}
