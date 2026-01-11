@@ -29,11 +29,12 @@ import {
   FileSpreadsheet,
 } from 'lucide-react';
 
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useNavigate, NavLink } from 'react-router';
 import SessionProvider from '../../utils/SessionProvider';
 import { ROLES } from '../../constants/APP';
 import { useDispatch } from 'react-redux';
 import { userLogOut } from '../login/userSlice';
+import { group } from 'console';
 
 const studentNavItems = [
   // Core Features - Level 1
@@ -132,7 +133,7 @@ const instituteNavItems = [
     icon: BarChart3,
     description: 'Overview, KPIs, and trends',
     category: 'main',
-    path: '/institute/dashboard',
+    path: '/institute',
   },
   {
     id: 'students',
@@ -156,7 +157,7 @@ const instituteNavItems = [
     icon: Calendar,
     description: 'Create, manage, and track job drives',
     category: 'main',
-    path: '/institute/drives',
+    path: '/institute/jobs',
   },
   {
     id: 'communications',
@@ -185,7 +186,6 @@ const instituteNavItems = [
 ];
 
 export function PostOutlate() {
-  const [activeSection, setActiveSection] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [announcements, setAnnouncements] = useState([
     {
@@ -250,6 +250,49 @@ export function PostOutlate() {
     navigate('/login');
   };
 
+  const renderNavigationItems = (category: string, label: string) => (
+    <div>
+      <h3 className="font-heading text-xs font-semibold text-blue-200 uppercase tracking-wider mb-3 px-3">
+        {label}
+      </h3>
+      <div className="space-y-1">
+        {navigationItems
+          .filter((item) => item.category === category)
+          .map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <NavLink
+                to={item.path}
+                key={item.id}
+                className={({ isActive, isPending, isTransitioning }) =>
+                  [
+                    isPending ? 'pending' : '',
+                    isActive
+                      ? ' bg-brand-orange text-white shadow-lg'
+                      : ' text-blue-100 hover:bg-blue-700 hover:text-white',
+                    isTransitioning ? 'transitioning' : '',
+                  ].join(
+                    ' group w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-all duration-200'
+                  )
+                }
+                aria-label={item.description}
+                title={item.description}
+                end
+              >
+                <Icon className="w-5 h-5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <span className="font-body font-medium block truncate">
+                    {item.label}
+                  </span>
+                </div>
+              </NavLink>
+            );
+          })}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background flex">
       {/* Enhanced Responsive Sidebar */}
@@ -289,183 +332,13 @@ export function PostOutlate() {
 
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
-          {/* Main Features */}
-          <div>
-            <h3 className="font-heading text-xs font-semibold text-blue-200 uppercase tracking-wider mb-3 px-3">
-              Main
-            </h3>
-            <div className="space-y-1">
-              {navigationItems
-                .filter((item) => item.category === 'main')
-                .map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        try {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                        } catch (error) {
-                          console.error('Navigation error:', error);
-                        }
-                      }}
-                      className={`
-                        group w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-all duration-200
-                        ${
-                          isActive
-                            ? 'bg-brand-orange text-white shadow-lg'
-                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
-                        }
-                      `}
-                      aria-label={item.description}
-                      title={item.description}
-                    >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <span className="font-body font-medium block truncate">
-                          {item.label}
-                        </span>
-                        {!isActive && (
-                          <span className="font-body text-xs text-blue-200 group-hover:text-blue-100 block truncate">
-                            {item.description}
-                          </span>
-                        )}
-                      </div>
-                      {item.badge && (
-                        <span className="bg-red-500 text-white font-body text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
-                          {item.badge}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-            </div>
-          </div>
-
-          {/* Career Tools */}
-          <div>
-            <h3 className="font-heading text-xs font-semibold text-blue-200 uppercase tracking-wider mb-3 px-3">
-              Career Tools
-            </h3>
-            <div className="space-y-1">
-              {navigationItems
-                .filter((item) => item.category === 'tools')
-                .map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        try {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                        } catch (error) {
-                          console.error('Navigation error:', error);
-                        }
-                      }}
-                      className={`
-                        group w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200
-                        ${
-                          isActive
-                            ? 'bg-brand-orange text-white shadow-lg'
-                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
-                        }
-                      `}
-                      aria-label={item.description}
-                      title={item.description}
-                    >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <span className="font-body font-medium block truncate">
-                          {item.label}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-            </div>
-          </div>
-
-          {/* Support & Analytics */}
-          <div>
-            <h3 className="font-heading text-xs font-semibold text-blue-200 uppercase tracking-wider mb-3 px-3">
-              Support
-            </h3>
-            <div className="space-y-1">
-              {navigationItems
-                .filter((item) => item.category === 'support')
-                .map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        try {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                        } catch (error) {
-                          console.error('Navigation error:', error);
-                        }
-                      }}
-                      className={`
-                        group w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200
-                        ${
-                          isActive
-                            ? 'bg-brand-orange text-white shadow-lg'
-                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
-                        }
-                      `}
-                      aria-label={item.description}
-                      title={item.description}
-                    >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <span className="font-body font-medium block truncate">
-                          {item.label}
-                        </span>
-                      </div>
-                      {item.badge && (
-                        <span className="bg-red-500 text-white font-body text-xs px-2 py-1 rounded-full min-w-[20px] text-center">
-                          {item.badge}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-            </div>
-          </div>
+          {renderNavigationItems('main', 'Main')}
+          {renderNavigationItems('tools', 'Career Tools')}
+          {renderNavigationItems('support', 'Support')}
         </nav>
 
         {/* Settings and Logout at bottom */}
         <div className="p-4 border-t border-blue-700 space-y-2">
-          <button
-            onClick={() => {
-              try {
-                setActiveSection('settings');
-                setSidebarOpen(false);
-              } catch (error) {
-                console.error('Navigation error:', error);
-              }
-            }}
-            className={`
-                w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-colors font-body
-                ${
-                  activeSection === 'settings'
-                    ? 'bg-brand-orange text-white'
-                    : 'text-blue-100 hover:bg-blue-700 hover:text-white'
-                }
-              `}
-          >
-            <Settings className="w-5 h-5" />
-            <span className="font-medium">Settings</span>
-          </button>
           <button
             className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-left transition-colors text-blue-100 hover:bg-red-600 hover:text-white font-body"
             onClick={handleLogout}
@@ -524,78 +397,57 @@ export function PostOutlate() {
           <div className="flex items-center space-x-2 md:space-x-4">
             {/* Quick Action Buttons - Responsive */}
             <div className="hidden lg:flex items-center space-x-2">
-              <Button
-                size="sm"
-                className="bg-brand-primary hover:bg-blue-700 font-body font-medium"
-                onClick={() => {
-                  setActiveSection('jobs');
-                }}
-                aria-label="Start applying to jobs"
-              >
-                Apply Now
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
+              <NavLink
+                to="/student/profile"
+                aria-label="Browse available jobs"
                 className="font-body"
-                onClick={() => {
-                  setActiveSection('profile');
-                }}
-                aria-label="Update your profile"
               >
                 Update Profile
-              </Button>
+              </NavLink>
             </div>
 
             {/* Mobile Quick Actions */}
             <div className="lg:hidden flex items-center space-x-1">
-              <Button
-                variant="ghost"
-                size="sm"
+              <NavLink
+                to="/student/jobs"
+                aria-label="Browse available jobs"
                 className="min-h-[44px] min-w-[44px] p-2"
-                onClick={() => {
-                  setActiveSection('jobs');
-                }}
-                aria-label="Find jobs"
               >
                 <Briefcase className="w-5 h-5" />
-              </Button>
+              </NavLink>
             </div>
 
             {/* Notification Bell with Count */}
-            <Button
-              variant="ghost"
-              size="sm"
+            <NavLink
+              to="/student/communications"
+              aria-label="Browse available jobs"
               className="relative min-h-[44px] min-w-[44px] p-2"
-              aria-label="View notifications (7 unread)"
-              onClick={() => {
-                setActiveSection('communications');
-              }}
             >
               <Bell className="w-5 h-5" />
               <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
                 7
               </div>
-            </Button>
+            </NavLink>
 
             {/* User Profile Section */}
             <div className="flex items-center space-x-2 md:space-x-3">
               <Avatar className="w-8 h-8 md:w-10 md:h-10 cursor-pointer hover:ring-2 hover:ring-blue-200 transition-all">
                 <AvatarFallback className="bg-brand-primary text-white text-sm font-semibold">
-                  AT
+                  {SessionProvider.getFullName()
+                    .split(' ')
+                    .map((n: string) => n[0])
+                    .join('')
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
 
               {/* User Info - Hidden on mobile */}
               <div className="hidden md:block">
                 <div className="font-body text-sm font-semibold text-primary-strong">
-                  Alex Thompson
+                  {SessionProvider.getFullName()}
                 </div>
-                <div className="font-body text-xs text-muted-light">
-                  Student
-                </div>
-                <div className="font-body text-xs text-faded-subtle">
-                  Last login: 2 hours ago
+                <div className="font-body text-xs text-muted-light text-uppercase">
+                  {SessionProvider.getRole()}
                 </div>
               </div>
 
@@ -619,7 +471,7 @@ export function PostOutlate() {
             {/* System Status & Announcements */}
             {renderAnnouncements()}
 
-            {/* Skip Link for Accessibility */}
+            {/* Skip NavLink for Accessibility */}
             <a
               href="#main-content"
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-primary text-white px-4 py-2 rounded-lg z-50 font-body"

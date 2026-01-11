@@ -9,7 +9,7 @@ export function PreLoginOutlate() {
 
   useEffect(() => {
     if (sessionObj.userDetails) {
-      navigate('/institute');
+      navigate(`/${sessionObj.userDetails.role}`);
     }
   }, [navigate, sessionObj.userDetails]);
   return (
