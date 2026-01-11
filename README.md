@@ -9,3 +9,6 @@ Run `npm i` to install the dependencies.
 Run `npm run dev` to start the development server.
 
 mentra
+
+aarav.sharma12@example.com
+StrongPass123

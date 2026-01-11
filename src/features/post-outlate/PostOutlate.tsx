@@ -44,7 +44,7 @@ const studentNavItems = [
     icon: BarChart3,
     description: 'Overview of your placement journey',
     category: 'main',
-    path: '/student/dashboard',
+    path: '/student',
   },
   {
     id: 'profile',
