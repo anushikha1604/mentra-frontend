@@ -3,6 +3,7 @@ import counterReducer from '../features/counter/counterSlice';
 import { loginSliceAPI } from '../features/login/loginSliceAPI';
 import { userSlice } from '../features/login/userSlice';
 import { instituteSlice } from '../features/signup/instituteSlice';
+import { rtkToastMiddleware } from './toast';
 
 export const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(
       loginSliceAPI.middleware,
-      instituteSlice.middleware
+      instituteSlice.middleware,
+      rtkToastMiddleware
     );
   },
 });
