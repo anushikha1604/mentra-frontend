@@ -13,7 +13,9 @@ export const rtkToastMiddleware: Middleware = () => (next) => (action) => {
   if (isRejectedWithValue(action)) {
     // Customize based on your API's error response structure
     const errorMessage =
-      (action.payload as any)?.data?.message || 'An unexpected error occurred';
+      (action.payload as any)?.data?.message ||
+      (action.payload as any)?.data?.error ||
+      'An unexpected error occurred';
     toast.error(errorMessage);
   }
 

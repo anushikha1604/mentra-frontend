@@ -190,12 +190,7 @@ export function SignupInstitute() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (
-      isSuccess &&
-      confirm(
-        'Account created successfully! Please check your email for verification.'
-      )
-    ) {
+    if (isSuccess) {
       navigate('/login');
     }
   }, [isSuccess]);
