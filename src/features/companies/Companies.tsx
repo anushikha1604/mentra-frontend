@@ -127,17 +127,53 @@ import {
   CheckCheck,
   AlertOctagon,
 } from 'lucide-react';
+import { MutationForm } from '../../common/Mutation';
+import { CREATE, UPDATE } from '../../constants/APP';
+
+const columns = [
+  {
+    name: 'CompanyName',
+    label: 'Company Name',
+    sortable: false,
+  },
+  {
+    name: 'emailId',
+    label: 'Email',
+    sortable: false,
+  },
+  {
+    name: 'contact',
+    label: 'Contact',
+    sortable: false,
+  },
+  {
+    name: 'address',
+    label: 'Address',
+    sortable: false,
+  },
+  {
+    name: 'city',
+    label: 'City',
+    sortable: false,
+  },
+  {
+    name: 'state',
+    label: 'State',
+  },
+  {
+    name: 'country',
+    label: 'Country',
+  },
+  {
+    name: 'pincode',
+    label: 'Pin Code',
+  },
+];
 
 export function Companies() {
-  const [editingItem, setEditingItem] = useState<any>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [modalType, setModalType] = useState('');
-  const [newItem, setNewItem] = useState<any>({});
+  const [editedItem, setEditedItem] = useState<any>({});
 
-  const [companies, setCompanies] = useState([
+  const [companies] = useState([
     {
       id: 1,
       name: 'Google',
@@ -172,35 +208,26 @@ export function Companies() {
     },
   ]);
 
-  const handleBulkImport = () => {
-    console.log('Bulk import initiated');
-  };
+  const [openModelType, setOpenModelType] = useState<string | boolean>(false);
 
-  const handleExportData = (format: string) => {
-    console.log(`Exporting data in ${format} format`);
-  };
-
-  const handleAddItem = (type: string) => {
-    setModalType(type);
-    setNewItem({});
-    setIsAddModalOpen(true);
+  const handleAddItem = () => {
+    setEditedItem({});
+    setOpenModelType(CREATE);
   };
 
   const handleEditItem = (item: any) => {
-    setEditingItem(item);
-    setIsEditModalOpen(true);
+    setEditedItem(item);
+    setOpenModelType(UPDATE);
   };
 
-  const handleDeleteItem = (id: number, type: string) => {
-    if (confirm('Are you sure you want to delete this item?')) {
-      switch (type) {
-        case 'student':
-          setStudents(students.filter((s) => s.id !== id));
-          break;
-        default:
-          break;
-      }
-    }
+  const handleMutationClose = () => {
+    setOpenModelType(false);
+    setEditedItem({});
+  };
+
+  const handleSubmit = (item: any) => {
+    console.log('Submitted Item:', item);
+    handleMutationClose();
   };
 
   return (
@@ -216,7 +243,7 @@ export function Companies() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button onClick={() => handleAddItem('company')} className="gap-2">
+            <Button onClick={handleAddItem} className="gap-2">
               <Plus className="w-4 h-4" />
               Add Company
             </Button>
@@ -291,48 +318,16 @@ export function Companies() {
         </div>
       </div>
 
-      {/* Edit Modal */}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Edit {editingItem?.name || 'Item'}</DialogTitle>
-            <DialogDescription>
-              Update the information for this item
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                value={editingItem?.name || ''}
-                onChange={(e) =>
-                  setEditingItem({ ...editingItem, name: e.target.value })
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={editingItem?.email || ''}
-                onChange={(e) =>
-                  setEditingItem({ ...editingItem, email: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setIsEditModalOpen(false)}>
-              Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <MutationForm
+        openModelType={openModelType}
+        handleOpenChange={(open) => {
+          if (!open) handleMutationClose();
+        }}
+        handleSubmit={handleSubmit}
+        handleClose={handleMutationClose}
+        editedItem={editedItem}
+        columns={columns}
+      />
     </div>
   );
 }

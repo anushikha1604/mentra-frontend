@@ -4,3 +4,4 @@ export const ROLES = {
   INSTITUTE: 'institute',
   ADMIN: 'admin',
 };
+export const [CREATE, UPDATE, BALANCE] = ['Create', 'Update', 'Balance'];
