@@ -11,7 +11,7 @@ interface UserDetails {
   alternatePhone: string;
   password: string;
   role: string;
-  collageId: string;
+  collegeId: string;
   city: string;
   state: string;
   country: string;
@@ -74,8 +74,8 @@ export default class SessionProvider {
     return SessionProvider.getUserObject().role;
   }
 
-  static getCollageId() {
-    return SessionProvider.getUserObject().collageId;
+  static getCollegeId() {
+    return SessionProvider.getUserObject().collegeId;
   }
 
   static getCity() {

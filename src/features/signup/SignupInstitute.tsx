@@ -238,7 +238,7 @@ export function SignupInstitute() {
                       htmlFor="fullName"
                       className="font-body text-primary-strong"
                     >
-                      Collage Name (Admin/Placement Officer) *
+                      College Name (Admin/Placement Officer) *
                     </Label>
                     <Input
                       id="fullName"

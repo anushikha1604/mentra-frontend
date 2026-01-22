@@ -55,7 +55,7 @@ export function SignupStudent() {
   }>({});
   const [formData, setFormData] = useState({
     studentId: '',
-    collageId: '',
+    collegeId: '',
     fullName: '',
     emailId: '',
     primaryPhone: '',
@@ -65,7 +65,7 @@ export function SignupStudent() {
     state: '',
     country: '',
     pincode: '',
-    collageName: '',
+    collegeName: '',
     course: '',
     year: '',
     DOB: '',
@@ -187,7 +187,7 @@ export function SignupStudent() {
       'state',
       'pincode',
       'gender',
-      'collageName',
+      'collegeName',
       'course',
       'year',
       'password',
@@ -578,26 +578,26 @@ export function SignupStudent() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label
-                      htmlFor="collageName"
+                      htmlFor="collegeName"
                       className="font-body text-primary-strong"
                     >
                       College/University Name *
                     </Label>
                     <Input
-                      id="collageName"
+                      id="collegeName"
                       placeholder="Enter your institution name"
                       className={`font-body ${
-                        validationErrors.collageName ? 'border-red-500' : ''
+                        validationErrors.collegeName ? 'border-red-500' : ''
                       }`}
-                      value={formData.collageName}
+                      value={formData.collegeName}
                       onChange={(e) =>
-                        handleInputChange('collageName', e.target.value)
+                        handleInputChange('collegeName', e.target.value)
                       }
                       required
                     />
-                    {validationErrors.collageName && (
+                    {validationErrors.collegeName && (
                       <p className="font-body text-xs text-red-600 mt-1">
-                        {validationErrors.collageName}
+                        {validationErrors.collegeName}
                       </p>
                     )}
                   </div>
@@ -688,7 +688,7 @@ export function SignupStudent() {
                 </div>
                 <div>
                   <Label
-                    htmlFor="collageId"
+                    htmlFor="collegeId"
                     className="font-body text-primary-strong"
                   >
                     College ID (Upload or Enter ID Number)
@@ -707,9 +707,9 @@ export function SignupStudent() {
                       <Input
                         placeholder="Or enter College ID number"
                         className="font-body"
-                        value={formData.collageId}
+                        value={formData.collegeId}
                         onChange={(e) =>
-                          handleInputChange('collageId', e.target.value)
+                          handleInputChange('collegeId', e.target.value)
                         }
                       />
                     </div>

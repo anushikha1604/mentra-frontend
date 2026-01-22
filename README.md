@@ -10,8 +10,12 @@ Run `npm run dev` to start the development server.
 
 mentra
 
+#### Student
+
 aarav.sharma12@example.com
 StrongPass123
+
+#### College
 
 const [loginData, setLoginData] = useState({
 emailId: 'jit@example.com',
