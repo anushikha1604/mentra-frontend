@@ -6,7 +6,7 @@ import { Building2, Edit, Trash2, Eye, Search, Plus } from 'lucide-react';
 import { MutationForm } from '../../common/MutationForm';
 import { CREATE, UPDATE } from '../../constants/APP';
 import {
-  Company,
+  Row,
   useAddAPIMutation,
   useGetAPIQuery,
   useRemoveAPIMutation,
@@ -17,7 +17,7 @@ import { DeleteDialog } from '../../common/DeleteDialog';
 const columns = [
   {
     name: 'CompanyName',
-    label: 'Company Name',
+    label: 'Row Name',
     sortable: false,
   },
   {
@@ -55,20 +55,20 @@ const columns = [
 ];
 
 export function Companies() {
-  const [editedItem, setEditedItem] = useState<Partial<Company>>({});
-  const { data = {} } = useGetAPIQuery<{ data: Company[] }>();
+  const [editedItem, setEditedItem] = useState<Partial<Row>>({});
+  const { data = { data: [] } } = useGetAPIQuery<{ data: Row[] }>();
   const [addAPI, { isError: addError }] = useAddAPIMutation();
   const [removeAPI] = useRemoveAPIMutation();
   const [updateAPI, { isError: updateError }] = useUpdateAPIMutation();
   const [openModelType, setOpenModelType] = useState<string | boolean>(false);
-  const [deleteItem, setDeleteItem] = useState<Company | null>(null);
+  const [deleteItem, setDeleteItem] = useState<Row | null>(null);
 
   const handleAddItem = () => {
     setEditedItem({});
     setOpenModelType(CREATE);
   };
 
-  const handleEditItem = (item: Company) => {
+  const handleEditItem = (item: Row) => {
     setEditedItem(item);
     setOpenModelType(UPDATE);
   };
@@ -78,7 +78,7 @@ export function Companies() {
     setEditedItem({});
   };
 
-  const handleSubmit = async (item: Company) => {
+  const handleSubmit = async (item: Row) => {
     if (openModelType === CREATE) {
       await addAPI(item);
     } else if (openModelType === UPDATE) {
@@ -103,7 +103,7 @@ export function Companies() {
     setDeleteItem(null);
   }, []);
 
-  const companies: Company[] = data.data || [];
+  const companies: Row[] = data.data || [];
 
   return (
     <>
@@ -124,7 +124,7 @@ export function Companies() {
             <div className="flex items-center gap-2">
               <Button onClick={handleAddItem} className="gap-2">
                 <Plus className="w-4 h-4" />
-                Add Company
+                Add Row
               </Button>
             </div>
           </div>

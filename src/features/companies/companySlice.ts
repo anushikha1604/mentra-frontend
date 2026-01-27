@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { apiBaseURL } from '../../constants/API';
-export interface Company {
+export interface Row {
   _id: string;
   companyId: string;
   CompanyName: string;
@@ -23,15 +23,15 @@ export const companySlice = createApi({
   }),
   tagTypes: [LIST_TAG],
   endpoints: (builder) => ({
-    getAPI: builder.query<Company[], void>({
+    getAPI: builder.query<Row[], void>({
       query: () => `companies`,
       providesTags: [LIST_TAG],
     }),
-    getAPIById: builder.query<Company, Company>({
+    getAPIById: builder.query<Row, Row>({
       query: (store) => `company/${store.companyId}`,
       providesTags: [LIST_TAG],
     }),
-    addAPI: builder.mutation<Company, Company>({
+    addAPI: builder.mutation<Row, Row>({
       query(reqObj) {
         return {
           url: `createcompany`,
@@ -40,7 +40,7 @@ export const companySlice = createApi({
         };
       },
     }),
-    updateAPI: builder.mutation<Company, Company>({
+    updateAPI: builder.mutation<Row, Row>({
       query(store) {
         return {
           url: `company/${store.companyId}`,
@@ -50,7 +50,7 @@ export const companySlice = createApi({
       },
       invalidatesTags: [LIST_TAG],
     }),
-    removeAPI: builder.mutation<Company, Company>({
+    removeAPI: builder.mutation<Row, Row>({
       query(store) {
         return {
           url: `company/${store.companyId}`,
