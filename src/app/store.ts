@@ -4,6 +4,7 @@ import { loginSliceAPI } from '../features/login/loginSliceAPI';
 import { userSlice } from '../features/login/userSlice';
 import { instituteSlice } from '../features/signup/instituteSlice';
 import { rtkToastMiddleware } from './toast';
+import { companySlice } from '../features/companies/companySlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,12 +12,14 @@ export const store = configureStore({
     [userSlice.reducerPath]: userSlice.reducer,
     [loginSliceAPI.reducerPath]: loginSliceAPI.reducer,
     [instituteSlice.reducerPath]: instituteSlice.reducer,
+    [companySlice.reducerPath]: companySlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(
       loginSliceAPI.middleware,
       instituteSlice.middleware,
-      rtkToastMiddleware
+      companySlice.middleware,
+      rtkToastMiddleware,
     );
   },
 });

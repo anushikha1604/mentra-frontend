@@ -11,11 +11,11 @@ export const companySlice = createApi({
   tagTypes: [LIST_TAG],
   endpoints: (builder) => ({
     getAPI: builder.query({
-      query: () => `list`,
+      query: () => `companies`,
       providesTags: [LIST_TAG],
     }),
     getAPIById: builder.query({
-      query: (id) => `company/${id}`,
+      query: (editedItem) => `company/${editedItem.id}`,
       providesTags: [LIST_TAG],
     }),
     addAPI: builder.mutation({
@@ -30,7 +30,7 @@ export const companySlice = createApi({
     updateAPI: builder.mutation({
       query(store) {
         return {
-          url: `company/${store.id}`,
+          url: `company/${store.companyId}`,
           method: 'PUT',
           body: store,
         };
@@ -40,7 +40,7 @@ export const companySlice = createApi({
     removeAPI: builder.mutation({
       query(store) {
         return {
-          url: `company/${store.id}`,
+          url: `company/${store.companyId}`,
           method: 'DELETE',
         };
       },

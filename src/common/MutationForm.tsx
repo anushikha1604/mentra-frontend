@@ -10,7 +10,7 @@ import {
 } from '../components/ui/dialog';
 import { Label } from '../components/ui/label';
 import { on } from 'events';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const InputField = ({
   label,
@@ -45,6 +45,10 @@ export function MutationForm({
   handleSubmit: (item: Record<string, any>) => void;
 }) {
   const [editingItem, setEditingItem] = useState(editedItem || {});
+
+  useEffect(() => {
+    setEditingItem(editedItem || {});
+  }, [editedItem]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -3,7 +3,10 @@ import { toast } from 'react-toastify';
 
 export const rtkToastMiddleware: Middleware = () => (next) => (action) => {
   // Narrow types for success actions
-  if (isFulfilled(action)) {
+  if (
+    isFulfilled(action) &&
+    action.meta?.baseQueryMeta?.request?.method !== 'GET'
+  ) {
     const message =
       (action.payload as { message?: string })?.message || 'Action Successful';
     toast.success(message);

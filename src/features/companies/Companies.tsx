@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -127,8 +127,15 @@ import {
   CheckCheck,
   AlertOctagon,
 } from 'lucide-react';
-import { MutationForm } from '../../common/Mutation';
+import { MutationForm } from '../../common/MutationForm';
 import { CREATE, UPDATE } from '../../constants/APP';
+import {
+  useAddAPIMutation,
+  useGetAPIQuery,
+  useRemoveAPIMutation,
+  useUpdateAPIMutation,
+} from './companySlice';
+import { DeleteDialog } from '../../common/DeleteDialog';
 
 const columns = [
   {
@@ -172,43 +179,12 @@ const columns = [
 
 export function Companies() {
   const [editedItem, setEditedItem] = useState<any>({});
-
-  const [companies] = useState([
-    {
-      id: 1,
-      name: 'Google',
-      industry: 'Technology',
-      size: '100,000+',
-      headquarters: 'Mountain View, CA',
-      contactPerson: 'John Smith',
-      email: 'john.smith@google.com',
-      phone: '+1-650-253-0000',
-      status: 'Active',
-      registrationDate: '2024-01-05',
-      upcomingDrives: 2,
-      totalHires: 45,
-      avgPackage: '₹52L',
-      website: 'https://google.com',
-    },
-    {
-      id: 2,
-      name: 'Microsoft',
-      industry: 'Technology',
-      size: '200,000+',
-      headquarters: 'Redmond, WA',
-      contactPerson: 'Jane Doe',
-      email: 'jane.doe@microsoft.com',
-      phone: '+1-425-882-8080',
-      status: 'Active',
-      registrationDate: '2024-01-10',
-      upcomingDrives: 1,
-      totalHires: 38,
-      avgPackage: '₹48L',
-      website: 'https://microsoft.com',
-    },
-  ]);
-
+  const { data = {}, isFetching } = useGetAPIQuery({});
+  const [addAPI, { isError: addError }] = useAddAPIMutation();
+  const [removeAPI] = useRemoveAPIMutation();
+  const [updateAPI, { isError: updateError }] = useUpdateAPIMutation();
   const [openModelType, setOpenModelType] = useState<string | boolean>(false);
+  const [deleteItem, setDeleteItem] = useState<any>(null);
 
   const handleAddItem = () => {
     setEditedItem({});
@@ -225,96 +201,117 @@ export function Companies() {
     setEditedItem({});
   };
 
-  const handleSubmit = (item: any) => {
-    console.log('Submitted Item:', item);
-    handleMutationClose();
+  const handleSubmit = async (item: any) => {
+    if (openModelType === CREATE) {
+      await addAPI(item);
+    } else if (openModelType === UPDATE) {
+      await updateAPI(item);
+    }
+    if (!(addError || updateError)) {
+      handleMutationClose();
+    }
   };
 
+  // Delete Dialog Handlers
+  const handleDeleteAgree = useCallback(async () => {
+    const resp = await removeAPI(deleteItem);
+    if (resp.error) {
+    } else {
+      setDeleteItem(null);
+    }
+  }, [removeAPI]);
+
+  const handleDeleteReject = useCallback(() => {
+    setDeleteItem(null);
+  }, []);
+
+  const companies = data.data || [];
+
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
-      <div className="space-y-6">
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-              <Input placeholder="Search companies..." className="pl-10 w-80" />
+    <>
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="space-y-6">
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-between">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                <Input
+                  placeholder="Search companies..."
+                  className="pl-10 w-80"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button onClick={handleAddItem} className="gap-2">
+                <Plus className="w-4 h-4" />
+                Add Company
+              </Button>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button onClick={handleAddItem} className="gap-2">
-              <Plus className="w-4 h-4" />
-              Add Company
-            </Button>
-          </div>
-        </div>
-
-        {/* Companies Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {companies.map((company) => (
-            <Card
-              key={company.id}
-              className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <Building2 className="w-6 h-6 text-white" />
+          {/* Companies Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {companies.map((company) => (
+              <Card
+                key={company.companyId}
+                className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <Building2 className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          {company.CompanyName}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {company.country}
+                          {` `}
+                          {company.city}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        {company.name}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {company.industry}
-                      </p>
-                    </div>
-                  </div>
-                  <Badge className="bg-green-100 text-green-700">
+                    {/* <Badge className="bg-green-100 text-green-700">
                     {company.status}
-                  </Badge>
-                </div>
+                  </Badge> */}
+                  </div>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Total Hires:</span>
-                    <span className="font-medium">{company.totalHires}</span>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">{company.emailId}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">{company.contact}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Avg Package:</span>
-                    <span className="font-medium text-green-600">
-                      {company.avgPackage}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Upcoming Drives:</span>
-                    <span className="font-medium">
-                      {company.upcomingDrives}
-                    </span>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Eye className="w-4 h-4 mr-1" />
-                    View
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleEditItem(company)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <Eye className="w-4 h-4 mr-1" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditItem(company)}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setDeleteItem(company)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -328,6 +325,12 @@ export function Companies() {
         editedItem={editedItem}
         columns={columns}
       />
-    </div>
+
+      <DeleteDialog
+        deleteItem={deleteItem}
+        handleDeleteReject={handleDeleteReject}
+        handleDeleteAgree={handleDeleteAgree}
+      />
+    </>
   );
 }

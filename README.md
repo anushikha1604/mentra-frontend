@@ -4,9 +4,9 @@ This is a code bundle for PlaceMate Student Portal Application. The original pro
 
 ## Running the code
 
-Run `npm i` to install the dependencies.
+Run `yarn i` to install the dependencies.
 
-Run `npm run dev` to start the development server.
+Run `yarn dev` or `yarn start` to start the development server.
 
 mentra
 
