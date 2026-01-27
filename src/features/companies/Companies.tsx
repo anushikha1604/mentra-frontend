@@ -1,135 +1,12 @@
-import React, { useCallback, useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { useCallback, useState } from 'react';
+import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Textarea } from '../../components/ui/textarea';
-import { Progress } from '../../components/ui/progress';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '../../components/ui/tabs';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '../../components/ui/avatar';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '../../components/ui/dialog';
-import { Label } from '../../components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select';
-import { Switch } from '../../components/ui/switch';
-import { Checkbox } from '../../components/ui/checkbox';
-import { JobDriveManager } from '../../components/JobDriveManager';
-import {
-  BarChart3,
-  Users,
-  Building2,
-  Briefcase,
-  MessageSquare,
-  Calendar,
-  FileText,
-  Upload,
-  Download,
-  Edit,
-  Trash2,
-  Eye,
-  Search,
-  Filter,
-  Plus,
-  Mail,
-  Phone,
-  MapPin,
-  Star,
-  TrendingUp,
-  TrendingDown,
-  Clock,
-  CheckCircle,
-  AlertTriangle,
-  Shield,
-  Settings,
-  Target,
-  Award,
-  GraduationCap,
-  DollarSign,
-  Send,
-  Bell,
-  Activity,
-  UserCheck,
-  UserX,
-  Building,
-  CalendarDays,
-  PieChart,
-  MoreHorizontal,
-  RefreshCw,
-  Save,
-  X,
-  ChevronRight,
-  Database,
-  Key,
-  Globe,
-  Zap,
-  LineChart,
-  Users2,
-  ClipboardList,
-  Megaphone,
-  FileSpreadsheet,
-  UserCog,
-  BookOpen,
-  Palette,
-  Link,
-  ShieldCheck,
-  HardDrive,
-  ArrowUpDown,
-  ExternalLink,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Info,
-  Loader2,
-  Copy,
-  Bookmark,
-  Archive,
-  MessageCircle,
-  Video,
-  Headphones,
-  Share2,
-  FileDown,
-  Folder,
-  CreditCard,
-  Wifi,
-  Monitor,
-  Smartphone,
-  Lock,
-  Unlock,
-  UserPlus,
-  Crown,
-  CheckCheck,
-  AlertOctagon,
-} from 'lucide-react';
+import { Building2, Edit, Trash2, Eye, Search, Plus } from 'lucide-react';
 import { MutationForm } from '../../common/MutationForm';
 import { CREATE, UPDATE } from '../../constants/APP';
 import {
+  Company,
   useAddAPIMutation,
   useGetAPIQuery,
   useRemoveAPIMutation,
@@ -178,20 +55,20 @@ const columns = [
 ];
 
 export function Companies() {
-  const [editedItem, setEditedItem] = useState<any>({});
-  const { data = {}, isFetching } = useGetAPIQuery({});
+  const [editedItem, setEditedItem] = useState<Partial<Company>>({});
+  const { data = {} } = useGetAPIQuery<{ data: Company[] }>();
   const [addAPI, { isError: addError }] = useAddAPIMutation();
   const [removeAPI] = useRemoveAPIMutation();
   const [updateAPI, { isError: updateError }] = useUpdateAPIMutation();
   const [openModelType, setOpenModelType] = useState<string | boolean>(false);
-  const [deleteItem, setDeleteItem] = useState<any>(null);
+  const [deleteItem, setDeleteItem] = useState<Company | null>(null);
 
   const handleAddItem = () => {
     setEditedItem({});
     setOpenModelType(CREATE);
   };
 
-  const handleEditItem = (item: any) => {
+  const handleEditItem = (item: Company) => {
     setEditedItem(item);
     setOpenModelType(UPDATE);
   };
@@ -201,7 +78,7 @@ export function Companies() {
     setEditedItem({});
   };
 
-  const handleSubmit = async (item: any) => {
+  const handleSubmit = async (item: Company) => {
     if (openModelType === CREATE) {
       await addAPI(item);
     } else if (openModelType === UPDATE) {
@@ -214,6 +91,7 @@ export function Companies() {
 
   // Delete Dialog Handlers
   const handleDeleteAgree = useCallback(async () => {
+    if (deleteItem === null) return;
     const resp = await removeAPI(deleteItem);
     if (resp.error) {
     } else {
@@ -225,7 +103,7 @@ export function Companies() {
     setDeleteItem(null);
   }, []);
 
-  const companies = data.data || [];
+  const companies: Company[] = data.data || [];
 
   return (
     <>
