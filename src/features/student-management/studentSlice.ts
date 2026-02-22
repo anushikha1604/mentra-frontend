@@ -10,7 +10,7 @@ export const studentSlice = createApi({
   }),
   tagTypes: [LIST_TAG],
   endpoints: (builder) => ({
-    getAPI: builder.query<Row[], void>({
+    getAPI: builder.query<{ data: Row[] }, void>({
       query: () => `students`,
       providesTags: [LIST_TAG],
     }),

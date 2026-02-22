@@ -23,7 +23,7 @@ export const companySlice = createApi({
   }),
   tagTypes: [LIST_TAG],
   endpoints: (builder) => ({
-    getAPI: builder.query<Row[], void>({
+    getAPI: builder.query<{ data: Row[] }, void>({
       query: () => `companies`,
       providesTags: [LIST_TAG],
     }),

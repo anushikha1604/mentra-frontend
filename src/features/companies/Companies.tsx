@@ -55,7 +55,7 @@ const columns: InputFieldProps[] = [
 
 export function Companies() {
   const [editedItem, setEditedItem] = useState<Partial<Row>>({});
-  const { data = { data: [] } } = useGetAPIQuery<{ data: Row[] }>();
+  const { data = { data: [] } } = useGetAPIQuery();
   const [addAPI, { isError: addError }] = useAddAPIMutation();
   const [removeAPI] = useRemoveAPIMutation();
   const [updateAPI, { isError: updateError }] = useUpdateAPIMutation();
