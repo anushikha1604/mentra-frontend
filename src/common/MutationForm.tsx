@@ -26,7 +26,7 @@ export interface MutationFormProps {
   openModelType: string | boolean;
   columns: Array<InputFieldProps>;
   handleClose: () => void;
-  handleSubmit: (item: Record<string, any>) => void;
+  handleSubmit: (item: any) => void;
   editedItem?: Record<string, any>;
 }
 
@@ -108,12 +108,11 @@ export function MutationForm({
               />
             ))}
           </div>
-          <DialogFooter>
+          <DialogFooter className="mt-4">
+            <Button type="submit">Save</Button>
+
             <Button variant="outline" onClick={handleClose}>
               Cancel
-            </Button>
-            <Button type="submit" autoFocus>
-              Save Changes
             </Button>
           </DialogFooter>
         </form>
