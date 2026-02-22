@@ -75,6 +75,11 @@ const columns: InputFieldProps[] = [
     label: 'Pin Code',
     type: 'number',
   },
+  {
+    name: 'DOB',
+    label: 'DOB',
+    type: 'date',
+  },
 ];
 
 export function StudentManagement() {
