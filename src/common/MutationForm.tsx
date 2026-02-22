@@ -11,23 +11,53 @@ import {
 import { Label } from '../components/ui/label';
 import { on } from 'events';
 import { useEffect, useState } from 'react';
+import { Textarea } from '../components/ui/textarea';
+
+export interface InputFieldProps {
+  label: string;
+  name: string;
+  value?: string;
+  type?: string;
+  onChange?: (e: any) => void;
+  required?: boolean;
+}
+export interface MutationFormProps {
+  handleOpenChange: (open: boolean) => void;
+  openModelType: string | boolean;
+  columns: Array<InputFieldProps>;
+  handleClose: () => void;
+  handleSubmit: (item: Record<string, any>) => void;
+  editedItem?: Record<string, any>;
+}
 
 const InputField = ({
   label,
   onChange,
   name,
   value,
-}: {
-  label: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name: string;
-  value: string;
-}) => (
-  <div>
-    <Label htmlFor={name}>{label}</Label>
-    <Input id={name} name={name} value={value} onChange={onChange} />
-  </div>
-);
+  type = 'text',
+  required = true,
+}: InputFieldProps) => {
+  const props = { label, onChange, name, value, type, required };
+
+  const renderSwitch = (type: string) => {
+    switch (type) {
+      case 'textarea':
+        return <Textarea {...props} />;
+      default:
+        return <Input {...props} />;
+    }
+  };
+
+  return (
+    <div>
+      <Label htmlFor={name}>
+        {label} {required ? '*' : ''}
+      </Label>
+      {renderSwitch(type)}
+    </div>
+  );
+};
 
 export function MutationForm({
   handleOpenChange,
@@ -36,14 +66,7 @@ export function MutationForm({
   editedItem = {},
   handleClose,
   handleSubmit,
-}: {
-  handleOpenChange: (open: boolean) => void;
-  openModelType: string | boolean;
-  columns: Array<{ name: string; label: string }>;
-  editedItem?: Record<string, any>;
-  handleClose: () => void;
-  handleSubmit: (item: Record<string, any>) => void;
-}) {
+}: MutationFormProps) {
   const [editingItem, setEditingItem] = useState(editedItem || {});
 
   useEffect(() => {
@@ -67,25 +90,33 @@ export function MutationForm({
             Update the information for this item
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {columns.map((column) => (
-            <InputField
-              key={column.name}
-              label={column.label}
-              name={column.name}
-              value={editingItem[column.name] || ''}
-              onChange={handleChange}
-            />
-          ))}
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button onClick={() => handleSubmit(editingItem)}>
-            Save Changes
-          </Button>
-        </DialogFooter>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(editingItem);
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {columns.map((column) => (
+              <InputField
+                key={column.name}
+                label={column.label}
+                name={column.name}
+                value={editingItem[column.name] || ''}
+                onChange={handleChange}
+                type={column.type}
+              />
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button type="submit" autoFocus>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -15,7 +15,7 @@ export interface Row {
   updatedAt: string;
 }
 
-const [LIST_TAG] = ['Companies'];
+const [LIST_TAG] = ['LIST_TAG'];
 export const companySlice = createApi({
   reducerPath: 'companyApi',
   baseQuery: fetchBaseQuery({
@@ -39,6 +39,7 @@ export const companySlice = createApi({
           body: reqObj,
         };
       },
+      invalidatesTags: [LIST_TAG],
     }),
     updateAPI: builder.mutation<Row, Row>({
       query(store) {

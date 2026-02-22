@@ -1,9 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Building2, Edit, Trash2, Eye, Search, Plus } from 'lucide-react';
-import { MutationForm } from '../../common/MutationForm';
+import { InputFieldProps, MutationForm } from '../../common/MutationForm';
 import { CREATE, UPDATE } from '../../constants/APP';
 import {
   Row,
@@ -14,31 +14,29 @@ import {
 } from './companySlice';
 import { DeleteDialog } from '../../common/DeleteDialog';
 
-const columns = [
+const columns: InputFieldProps[] = [
   {
     name: 'CompanyName',
-    label: 'Row Name',
-    sortable: false,
+    label: 'Company Name',
   },
   {
     name: 'emailId',
     label: 'Email',
-    sortable: false,
+    type: 'email',
   },
   {
     name: 'contact',
     label: 'Contact',
-    sortable: false,
+    type: 'tel',
   },
   {
     name: 'address',
     label: 'Address',
-    sortable: false,
+    type: 'textarea',
   },
   {
     name: 'city',
     label: 'City',
-    sortable: false,
   },
   {
     name: 'state',
@@ -51,6 +49,7 @@ const columns = [
   {
     name: 'pincode',
     label: 'Pin Code',
+    type: 'number',
   },
 ];
 
@@ -78,7 +77,7 @@ export function Companies() {
     setEditedItem({});
   };
 
-  const handleSubmit = async (item: Row) => {
+  const handleMutationSubmit = async (item: Row) => {
     if (openModelType === CREATE) {
       await addAPI(item);
     } else if (openModelType === UPDATE) {
@@ -90,18 +89,18 @@ export function Companies() {
   };
 
   // Delete Dialog Handlers
-  const handleDeleteAgree = useCallback(async () => {
+  const handleDeleteAgree = async () => {
     if (deleteItem === null) return;
     const resp = await removeAPI(deleteItem);
     if (resp.error) {
     } else {
       setDeleteItem(null);
     }
-  }, [removeAPI]);
+  };
 
-  const handleDeleteReject = useCallback(() => {
+  const handleDeleteReject = () => {
     setDeleteItem(null);
-  }, []);
+  };
 
   const companies: Row[] = data.data || [];
 
@@ -198,7 +197,7 @@ export function Companies() {
         handleOpenChange={(open) => {
           if (!open) handleMutationClose();
         }}
-        handleSubmit={handleSubmit}
+        handleSubmit={handleMutationSubmit}
         handleClose={handleMutationClose}
         editedItem={editedItem}
         columns={columns}
